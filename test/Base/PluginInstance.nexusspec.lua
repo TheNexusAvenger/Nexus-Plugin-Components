@@ -102,6 +102,15 @@ NexusUnitTesting:RegisterUnitTest(PluginInstanceTest.new("SetColorModifierPlugin
     self:AssertEquals(self.CuT:GetWrappedInstance().BackgroundColor3, Color3.new(1, 1, 0))
 end))
 
+--[[
+Tests SetAllColorModifiers.
+--]]
+NexusUnitTesting:RegisterUnitTest(PluginInstanceTest.new("SetAllColorModifiers"):SetRun(function(self)
+    self.CuT.BackgroundColor3 = Enum.StudioStyleGuideColor.Button
+    self.CuT:SetAllColorModifiers(Enum.StudioStyleGuideModifier.Disabled)
+    self:AssertEquals(self.CuT:GetWrappedInstance().BackgroundColor3, Color3.new(1, 1, 0))
+end))
+
 
 
 return true

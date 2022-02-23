@@ -68,8 +68,10 @@ function PluginInstance:__new(InstanceToWrap)
     self:InitializeSuper(InstanceToWrap)
 
     --Set up the color property storage.
+    self:DisableChangeReplication("WrappedClassName")
     local WrappedInstance = self:GetWrappedInstance()
     local WrappedClassName = WrappedInstance.ClassName
+    self.WrappedClassName = WrappedClassName
     if not self.ColorProperties[WrappedClassName] then
         self.ColorProperties[WrappedClassName] = {}
     end
@@ -137,6 +139,17 @@ function PluginInstance:SetColorModifier(PropertyName, Modifier)
 
     --Change the color.
     self[PropertyName] = PluginColor.new(Color.ColorEnum, Modifier)
+end
+
+--[[
+Sets all the color modifiers of the plugin colors.
+--]]
+function PluginInstance:SetAllColorModifiers(Modifier)
+    for PropertyName, IsColorProperty in pairs(self.ColorProperties[self.WrappedClassName]) do
+        if IsColorProperty then
+            self:SetColorModifier(PropertyName, Modifier)
+        end
+    end
 end
 
 --[[
