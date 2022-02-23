@@ -17,7 +17,7 @@ TextBox:SetClassName("TextBox")
 Creates the TextBox.
 --]]
 function TextBox:__new()
-    self:InitializeSuper("TextButton")
+    self:InitializeSuper("TextBox")
 
     --Add the Disabled property.
     self:DisableChangeReplication("Disabled")
