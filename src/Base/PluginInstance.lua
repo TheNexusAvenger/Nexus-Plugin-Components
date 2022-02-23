@@ -17,6 +17,11 @@ local INSTANCE_CREATION_PRESETS = {
     ScrollingFrame = {
         BackgroundColor3 = Enum.StudioStyleGuideColor.MainBackground,
         BorderColor3 = Enum.StudioStyleGuideColor.Border,
+        ScrollBarThickness = 12,
+        ScrollBarImageColor3 = Enum.StudioStyleGuideColor.ScrollBar,
+        BottomImage = "rbxasset://textures/AvatarEditorImages/LightPixel.png",
+        MidImage = "rbxasset://textures/AvatarEditorImages/LightPixel.png",
+        TopImage = "rbxasset://textures/AvatarEditorImages/LightPixel.png",
     },
 	TextLabel = {
 		BackgroundTransparency = 1,
