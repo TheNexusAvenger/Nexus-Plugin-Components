@@ -10,6 +10,14 @@ local INSTANCE_CREATION_PRESETS = {
 		BorderColor3 = Enum.StudioStyleGuideColor.Border,
 		BorderSizePixel = 0,
 	},
+    ImageButton = {
+        BackgroundColor3 = Enum.StudioStyleGuideColor.Button,
+        BorderColor3 = Enum.StudioStyleGuideColor.ButtonBorder,
+    },
+    ScrollingFrame = {
+        BackgroundColor3 = Enum.StudioStyleGuideColor.MainBackground,
+        BorderColor3 = Enum.StudioStyleGuideColor.Border,
+    },
 	TextLabel = {
 		BackgroundTransparency = 1,
 		TextColor3 = Enum.StudioStyleGuideColor.MainText,
@@ -36,7 +44,7 @@ local INSTANCE_CREATION_PRESETS = {
 		TextSize = 14,
 		ClearTextOnFocus = false,
 		ClipsDescendants = true,
-	}
+	},
 }
 
 

@@ -5,6 +5,7 @@ Main project for using Nexus Plugin Components.
 --]]
 
 local CLASS_NAME_TO_PATH = {
+    Event = "NexusInstance.Event.NexusEvent",
     PluginColor = "Base.PluginColor",
 }
 
