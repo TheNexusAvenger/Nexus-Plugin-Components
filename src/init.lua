@@ -9,6 +9,7 @@ local CLASS_NAME_TO_PATH = {
     PluginColor = "Base.PluginColor",
     ImageButton = "Input.Roblox.ImageButton",
     TextButton = "Input.Roblox.TextButton",
+    TextBox = "Input.Roblox.TextBox",
 }
 
 
