@@ -1,0 +1,30 @@
+{
+    "name": "Nexus-Plugin-Components",
+    "tree": {
+        "$className": "DataModel",
+        "ReplicatedStorage": {
+            "$className": "ReplicatedStorage",
+            "NexusPluginComponents": {
+                "$path": "./src",
+                "NexusInstance": {
+                    "$path": "./module/Nexus-Instance/src"
+                },
+                "NexusWrappedInstance": {
+                    "$path": "./module/Nexus-Wrapped-Instance/src",
+                    "NexusInstance": {
+                        "$path": "./module/Nexus-Wrapped-Instance/module/Nexus-Instance/src"
+                    }
+                },
+                "NexusProject": {
+                    "$path": "./module/Nexus-Project/src",
+                    "NexusInstance": {
+                        "$path": "./module/Nexus-Project/module/Nexus-Instance/src"
+                    }
+                }
+            },
+            "NexusPluginComponents.nexusspec": {
+                "$path": "./test"
+            }
+        }
+    }
+}
