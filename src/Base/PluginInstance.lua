@@ -101,7 +101,10 @@ function PluginInstance:__new(InstanceToWrap)
     table.insert(self.EventsToDisconnect, self.Settings.Studio.ThemeChanged:Connect(function()
         for PropertyName, IsColorProperty in pairs(ColorProperties) do
             if IsColorProperty then
-                self:SetColorModifier(PropertyName)
+                local Color = self[PropertyName]
+                if typeof(Color) == "table" and Color.IsA and Color:IsA("PluginColor") then
+                    self[PropertyName] = PluginColor.new(Color.ColorEnum, Color.ModiferEnum)
+                end
             end
         end
     end))
@@ -116,18 +119,24 @@ end
 
 --[[
 Updates the modifier of a plugin color. If a PluginColor is not
-in use, there will be no effect. If no modifer is provided, it will
-use the existing one, effecitvely refreshing it (such as the theme changing).
+in use, there will be no effect.
 --]]
 function PluginInstance:SetColorModifier(PropertyName, Modifier)
+    Modifier = Modifier or Enum.StudioStyleGuideModifier.Default
+
     --Return if the color isn't a PluginColor.
     local Color = self[PropertyName]
     if not (typeof(Color) == "table" and Color.IsA and Color:IsA("PluginColor")) then
         return
     end
 
+    --Return if the modifer is the same.
+    if Color.ModiferEnum == Modifier then
+        return
+    end
+
     --Change the color.
-    self[PropertyName] = PluginColor.new(Color.ColorEnum, Modifier or Color.ModiferEnum)
+    self[PropertyName] = PluginColor.new(Color.ColorEnum, Modifier)
 end
 
 --[[
