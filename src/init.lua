@@ -5,8 +5,14 @@ Main project for using Nexus Plugin Components.
 --]]
 
 local CLASS_NAME_TO_PATH = {
+    --Nexus Instance.
     Event = "NexusInstance.Event.NexusEvent",
+
+    --Helper.
     PluginColor = "Base.PluginColor",
+    ElementList = "Input.Custom.ElementList",
+
+    --Roblox.
     ImageButton = "Input.Roblox.ImageButton",
     TextButton = "Input.Roblox.TextButton",
     TextBox = "Input.Roblox.TextBox",
