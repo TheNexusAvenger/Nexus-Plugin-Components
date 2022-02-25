@@ -7,6 +7,7 @@ Manages the state of a collapsable list.
 local NexusPluginComponents = require(script.Parent.Parent)
 
 local NexusInstance = NexusPluginComponents:GetResource("NexusInstance.NexusInstance")
+local UserInputService = NexusPluginComponents:GetResource("Input.Service.UserInputService")
 
 local SelectionList = NexusInstance:Extend()
 SelectionList:SetClassName("SelectionList")
@@ -134,8 +135,8 @@ Toggles an entry being selected.
 --]]
 function SelectionList:ToggleSelection(Entry)
     --Determine the inputs.
-    local ControlDown = false --TODO: Get actual resut from input.
-    local ShiftDown = false --TODO: Get actual resut from input.
+    local ControlDown = UserInputService:IsKeyDown(Enum.KeyCode.LeftControl) or UserInputService:IsKeyDown(Enum.KeyCode.RightControl)
+    local ShiftDown = UserInputService:IsKeyDown(Enum.KeyCode.LeftShift) or UserInputService:IsKeyDown(Enum.KeyCode.RightShift)
     if self.OverrideControlDown ~= nil then ControlDown = self.OverrideControlDown end
     if self.OverrideShiftDown ~= nil then ShiftDown = self.OverrideShiftDown end
 
