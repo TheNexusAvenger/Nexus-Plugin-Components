@@ -11,6 +11,7 @@ local CLASS_NAME_TO_PATH = {
     --Helper.
     PluginColor = "Base.PluginColor",
     ElementList = "Input.Custom.ElementList",
+    SelectionList = "State.SelectionList",
 
     --Roblox.
     ImageButton = "Input.Roblox.ImageButton",
