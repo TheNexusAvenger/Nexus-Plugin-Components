@@ -5,11 +5,11 @@ Wrapped plugin instance with additional functionality.
 --]]
 
 local INSTANCE_CREATION_PRESETS = {
-	Frame = {
-		BackgroundColor3 = Enum.StudioStyleGuideColor.MainBackground,
-		BorderColor3 = Enum.StudioStyleGuideColor.Border,
-		BorderSizePixel = 0,
-	},
+    Frame = {
+        BackgroundColor3 = Enum.StudioStyleGuideColor.MainBackground,
+        BorderColor3 = Enum.StudioStyleGuideColor.Border,
+        BorderSizePixel = 0,
+    },
     ImageButton = {
         BackgroundColor3 = Enum.StudioStyleGuideColor.Button,
         BorderColor3 = Enum.StudioStyleGuideColor.ButtonBorder,
@@ -23,33 +23,33 @@ local INSTANCE_CREATION_PRESETS = {
         MidImage = "rbxasset://textures/AvatarEditorImages/LightPixel.png",
         TopImage = "rbxasset://textures/AvatarEditorImages/LightPixel.png",
     },
-	TextLabel = {
-		BackgroundTransparency = 1,
-		TextColor3 = Enum.StudioStyleGuideColor.MainText,
-		TextXAlignment = Enum.TextXAlignment.Left,
-		Font = Enum.Font.SourceSans,
-		TextSize = 14,
-	},
-	TextButton = {
-		BackgroundColor3 = Enum.StudioStyleGuideColor.Button,
-		BorderColor3 = Enum.StudioStyleGuideColor.ButtonBorder,
-		BorderSizePixel = 1,
-		TextColor3 = Enum.StudioStyleGuideColor.ButtonText,
-		Font = Enum.Font.SourceSans,
-		TextSize = 14,
-	},
-	TextBox = {
-		BackgroundColor3 = Enum.StudioStyleGuideColor.InputFieldBackground,
-		BorderColor3 = Enum.StudioStyleGuideColor.InputFieldBorder,
-		BorderSizePixel = 1,
-		TextColor3 = Enum.StudioStyleGuideColor.MainText,
-		PlaceholderColor3 = Enum.StudioStyleGuideColor.DimmedText,
-		TextXAlignment = Enum.TextXAlignment.Left,
-		Font = Enum.Font.SourceSans,
-		TextSize = 14,
-		ClearTextOnFocus = false,
-		ClipsDescendants = true,
-	},
+    TextLabel = {
+        BackgroundTransparency = 1,
+        TextColor3 = Enum.StudioStyleGuideColor.MainText,
+        TextXAlignment = Enum.TextXAlignment.Left,
+        Font = Enum.Font.SourceSans,
+        TextSize = 14,
+    },
+    TextButton = {
+        BackgroundColor3 = Enum.StudioStyleGuideColor.Button,
+        BorderColor3 = Enum.StudioStyleGuideColor.ButtonBorder,
+        BorderSizePixel = 1,
+        TextColor3 = Enum.StudioStyleGuideColor.ButtonText,
+        Font = Enum.Font.SourceSans,
+        TextSize = 14,
+    },
+    TextBox = {
+        BackgroundColor3 = Enum.StudioStyleGuideColor.InputFieldBackground,
+        BorderColor3 = Enum.StudioStyleGuideColor.InputFieldBorder,
+        BorderSizePixel = 1,
+        TextColor3 = Enum.StudioStyleGuideColor.MainText,
+        PlaceholderColor3 = Enum.StudioStyleGuideColor.DimmedText,
+        TextXAlignment = Enum.TextXAlignment.Left,
+        Font = Enum.Font.SourceSans,
+        TextSize = 14,
+        ClearTextOnFocus = false,
+        ClipsDescendants = true,
+    },
 }
 
 

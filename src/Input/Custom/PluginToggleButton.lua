@@ -17,26 +17,26 @@ PluginToggleButton:SetClassName("PluginToggleButton")
 Creates the Plugin Toggle Button.
 --]]
 function PluginToggleButton:__new(Button, PluginGui)
-	self:InitializeSuper(Button)
+    self:InitializeSuper(Button)
 
-	--Set up the changed event.
-	PluginGui:GetPropertyChangedSignal("Enabled"):Connect(function()
+    --Set up the changed event.
+    PluginGui:GetPropertyChangedSignal("Enabled"):Connect(function()
         self:SetActive(PluginGui.Enabled)
-	end)
+    end)
 
-	--Set up toggling the PluginGui.
-	local DB = true
-	self.Click:Connect(function()
-		if DB then
-			DB = false
-			PluginGui.Enabled = not PluginGui.Enabled
+    --Set up toggling the PluginGui.
+    local DB = true
+    self.Click:Connect(function()
+        if DB then
+            DB = false
+            PluginGui.Enabled = not PluginGui.Enabled
             self:SetActive(PluginGui.Enabled)
-			wait()
-			DB = true
-		end
-	end)
+            wait()
+            DB = true
+        end
+    end)
 
-	--Set the default.
+    --Set the default.
     self:SetActive(PluginGui.Enabled)
 end
 
