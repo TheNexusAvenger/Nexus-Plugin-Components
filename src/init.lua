@@ -17,6 +17,9 @@ local CLASS_NAME_TO_PATH = {
     ImageButton = "Input.Roblox.ImageButton",
     TextButton = "Input.Roblox.TextButton",
     TextBox = "Input.Roblox.TextBox",
+
+    --Custom.
+    CollapsableListFrame = "Input.Custom.CollapsableListFrame",
 }
 
 
