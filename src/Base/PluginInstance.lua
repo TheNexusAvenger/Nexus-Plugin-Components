@@ -62,7 +62,9 @@ local PluginColor = NexusPluginComponents:GetResource("Base.PluginColor")
 local PluginInstance = NexusWrappedInstance:Extend()
 PluginInstance:SetClassName("PluginInstance")
 PluginInstance.ColorProperties = {}
-PluginInstance.Settings = settings()
+pcall(function()
+    PluginInstance.Settings = settings()
+end)
 
 
 
@@ -105,16 +107,19 @@ function PluginInstance:__new(InstanceToWrap)
     })
 
     --Connect updating the themes.
-    table.insert(self.EventsToDisconnect, self.Settings.Studio.ThemeChanged:Connect(function()
-        for PropertyName, IsColorProperty in pairs(ColorProperties) do
-            if IsColorProperty then
-                local Color = self[PropertyName]
-                if typeof(Color) == "table" and Color.IsA and Color:IsA("PluginColor") then
-                    self[PropertyName] = PluginColor.new(Color.ColorEnum, Color.ModiferEnum)
+    self:DisableChangeReplication("Settings")
+    if self.Settings then
+        table.insert(self.EventsToDisconnect, self.Settings.Studio.ThemeChanged:Connect(function()
+            for PropertyName, IsColorProperty in pairs(ColorProperties) do
+                if IsColorProperty then
+                    local Color = self[PropertyName]
+                    if typeof(Color) == "table" and Color.IsA and Color:IsA("PluginColor") then
+                        self[PropertyName] = PluginColor.new(Color.ColorEnum, Color.ModiferEnum)
+                    end
                 end
             end
-        end
-    end))
+        end))
+    end
 
     --Set the defaults.
     if typeof(InstanceToWrap) == "string" and INSTANCE_CREATION_PRESETS[WrappedClassName] then

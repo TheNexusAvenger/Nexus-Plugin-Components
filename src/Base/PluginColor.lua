@@ -10,7 +10,9 @@ local NexusObject = NexusPluginComponents:GetResource("NexusInstance.NexusObject
 
 local PluginColor = NexusObject:Extend()
 PluginColor:SetClassName("PluginColor")
-PluginColor.Settings = settings()
+pcall(function()
+    PluginColor.Settings = settings()
+end)
 
 
 
@@ -31,7 +33,11 @@ function PluginColor:__new(ColorEnum, ModiferEnum)
     --Store the color.
     self.ColorEnum = ColorEnum
     self.ModiferEnum = ModiferEnum or Enum.StudioStyleGuideModifier.Default
-    self.Color3 = self.Settings.Studio.Theme:GetColor(self.ColorEnum, self.ModiferEnum)
+    if self.Settings then
+        self.Color3 = self.Settings.Studio.Theme:GetColor(self.ColorEnum, self.ModiferEnum)
+    else
+        self.Color3 = Color3.new(0, 0, 0)
+    end
 end
 
 --[[
