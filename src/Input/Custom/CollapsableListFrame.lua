@@ -45,6 +45,7 @@ function CollapsableListFrame:__new()
     self:DisableChangeReplication("SelectionListEntry")
 
     --Create the frames.
+    self.BackgroundColor3 = Enum.StudioStyleGuideColor.TableItem
     local Arrow = PluginInstance.new("ImageButton")
     Arrow.Name = "Arrow"
     Arrow.BackgroundTransparency = 1
@@ -56,7 +57,6 @@ function CollapsableListFrame:__new()
 
     local Container = PluginInstance.new("Frame")
     Container.BackgroundTransparency = 1
-    Container.BackgroundColor3 = Enum.StudioStyleGuideColor.TableItem
     Container.Name = "Container"
     Container.Size = UDim2.new(1, 0, 1, 0)
     Container.Position = UDim2.new(1, 0, 0, 0)
@@ -92,18 +92,19 @@ function CollapsableListFrame:__new()
     end)
 
     --Connect hovering.
-    Container.MouseEnter:Connect(function()
+    self.MouseEnter:Connect(function()
         self.Hovering = true
         self:UpdateColors()
     end)
-    Container.MouseLeave:Connect(function()
+    self.MouseLeave:Connect(function()
         self.Hovering = false
         self:UpdateColors()
     end)
 
     --Set up selecting.
     local LastClickTime = 0
-    Container.InputBegan:Connect(function(Input)
+    self.InputBegan:Connect(function(Input, Processed)
+        if Processed then return end
         if DB and Input.UserInputType == Enum.UserInputType.MouseButton1 then
             DB = false
             local List = self.SelectionList
@@ -149,10 +150,10 @@ Updates the colors of the container.
 function CollapsableListFrame:UpdateColors()
     local Entry = self.SelectionListEntry
     if not Entry or not Entry.Selectable or (not Entry.Selected and not self.Hovering) then
-        self.AdornFrame.BackgroundTransparency = 1
+        self.BackgroundTransparency = 1
     else
-        self.AdornFrame.BackgroundTransparency = 0
-        self.AdornFrame:SetColorModifier("BackgroundColor3", (Entry.Selected and Enum.StudioStyleGuideModifier.Selected) or (self.Hovering and Enum.StudioStyleGuideModifier.Hover) or Enum.StudioStyleGuideModifier.Default)
+        self.BackgroundTransparency = 0
+        self:SetColorModifier("BackgroundColor3", (Entry.Selected and Enum.StudioStyleGuideModifier.Selected) or (self.Hovering and Enum.StudioStyleGuideModifier.Hover) or Enum.StudioStyleGuideModifier.Default)
     end
 end
 
