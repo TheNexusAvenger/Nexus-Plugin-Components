@@ -22,10 +22,13 @@ function TextBox:__new()
     --Add the Disabled property.
     self:DisableChangeReplication("Disabled")
     self:GetPropertyChangedSignal("Disabled"):Connect(function()
-        self:ReleaseFocus()
+        if self.Disabled then
+            self:ReleaseFocus()
+        end
         self:SetAllColorModifiers(self.Disabled and Enum.StudioStyleGuideModifier.Disabled or Enum.StudioStyleGuideModifier.Default)
     end)
     self.Focused:Connect(function()
+        if not self.Disabled then return end
         self:ReleaseFocus()
     end)
     self.Disabled = false
