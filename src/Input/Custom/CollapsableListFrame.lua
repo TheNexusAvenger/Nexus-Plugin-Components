@@ -46,22 +46,23 @@ function CollapsableListFrame:__new()
 
     --Create the frames.
     local Arrow = PluginInstance.new("ImageButton")
-	Arrow.Name = "Arrow"
-	Arrow.BackgroundTransparency = 1
-	Arrow.SizeConstraint = "RelativeYY"
+    Arrow.Name = "Arrow"
+    Arrow.BackgroundTransparency = 1
+    Arrow.SizeConstraint = "RelativeYY"
     Arrow.AnchorPoint = Vector2.new(0.5, 0.5)
-	Arrow.ImageColor3 = Color3.new(151/255, 151/255, 151/255)
-	Arrow.Parent = self
-	self.Arrow = Arrow
+    Arrow.ImageColor3 = Color3.new(151/255, 151/255, 151/255)
+    Arrow.Parent = self
+    self.Arrow = Arrow
 
     local Container = PluginInstance.new("Frame")
-	Container.BackgroundTransparency = 0
-	Container.Name = "Container"
-	Container.Size = UDim2.new(1, 0, 1, 0)
-	Container.Position = UDim2.new(1, 0, 0, 0)
-	Container.AnchorPoint = Vector2.new(1, 0)
-	Container.Parent = self
-	self.AdornFrame = Container
+    Container.BackgroundTransparency = 1
+    Container.BackgroundColor3 = Enum.StudioStyleGuideColor.TableItem
+    Container.Name = "Container"
+    Container.Size = UDim2.new(1, 0, 1, 0)
+    Container.Position = UDim2.new(1, 0, 0, 0)
+    Container.AnchorPoint = Vector2.new(1, 0)
+    Container.Parent = self
+    self.AdornFrame = Container
 
     --Set the initial properties.
     self.BackgroundTransparency = 1
@@ -102,7 +103,7 @@ function CollapsableListFrame:__new()
 
     --Set up selecting.
     local LastClickTime = 0
-	Container.InputBegan:Connect(function(Input)
+    Container.InputBegan:Connect(function(Input)
         if DB and Input.UserInputType == Enum.UserInputType.MouseButton1 then
             DB = false
             local List = self.SelectionList
@@ -132,7 +133,7 @@ function CollapsableListFrame:__new()
             wait()
             DB = true
         end
-	end)
+    end)
 
     --Update the size.
     self:GetPropertyChangedSignal("AbsoluteSize"):Connect(function()
@@ -147,11 +148,11 @@ Updates the colors of the container.
 --]]
 function CollapsableListFrame:UpdateColors()
     local Entry = self.SelectionListEntry
-    if not Entry or not Entry.Selectable then
+    if not Entry or not Entry.Selectable or (not Entry.Selected and not self.Hovering) then
         self.AdornFrame.BackgroundTransparency = 1
     else
         self.AdornFrame.BackgroundTransparency = 0
-        self.AdornFrame:SetColorModifier("BackgroundColor3", (Entry.Selected and Enum.StudioStyleGuideModifier.Selected) or (Entry.Selected and Enum.StudioStyleGuideModifier.Hovering) or Enum.StudioStyleGuideModifier.Default)
+        self.AdornFrame:SetColorModifier("BackgroundColor3", (Entry.Selected and Enum.StudioStyleGuideModifier.Selected) or (self.Hovering and Enum.StudioStyleGuideModifier.Hover) or Enum.StudioStyleGuideModifier.Default)
     end
 end
 
