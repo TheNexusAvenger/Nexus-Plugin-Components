@@ -21,6 +21,7 @@ function SelectionList:__new()
     self:InitializeSuper()
 
     self.Selected = false
+    self.Selectable = true
     self.Expanded = true
     self.Children = {}
 end

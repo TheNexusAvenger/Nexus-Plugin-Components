@@ -34,8 +34,8 @@ function ElementList:__new(EntryClass)
     self.FrameEntries = {}
     self:DisableChangeReplication("DataEntries")
     self.DataEntries = {}
-    self:DisableChangeReplication("EntryClass")
-    self.EntryClass = EntryClass
+    self:DisableChangeReplication("CreateEntry")
+    self.CreateEntry = (typeof(EntryClass) == "function" and EntryClass or EntryClass.new)
     self:DisableChangeReplication("EntryHeight")
     self.EntryHeight = 16
     self:DisableChangeReplication("CurrentOffset")
@@ -81,9 +81,12 @@ function ElementList:UpdateTotalFrames()
     local RequiredEntries = math.ceil(self.AbsoluteSize.Y / self.EntryHeight) + 1
     local FrameEntries, DataEntries = self.FrameEntries, self.DataEntries
     for i = #FrameEntries + 1, RequiredEntries do
-        local Entry = self.EntryClass.new()
+        local Entry = self.CreateEntry()
         Entry.Size = UDim2.new(1, 0, 1, 0)
         Entry.Position = UDim2.new(0, 0, i - 1, 0)
+        if Entry:IsA("CollapsableListFrame") then
+            Entry.ElementList = self
+        end
         Entry.Parent = self.AdornFrame
         Entry:Update(DataEntries[i + math.floor(StartIndex)])
         table.insert(FrameEntries, Entry)
