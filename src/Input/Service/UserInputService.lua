@@ -9,8 +9,6 @@ local INPUT_DELAY_TIME = 0.05
 
 
 
-local PluginGuiService = game:GetService("PluginGuiService")
-
 local NexusPluginComponents = require(script.Parent.Parent.Parent)
 local NexusEvent = NexusPluginComponents:GetResource("NexusInstance.Event.NexusEvent")
 
@@ -40,15 +38,18 @@ function WrappedUserInputService:__new()
 
     --Connect the events.
     self:AddContext(game:GetService("UserInputService"))
-    PluginGuiService.DescendantAdded:Connect(function(Frame)
-        if Frame:IsA("GuiObject") then
-            self:AddContext(Frame)
-        end
-    end)
-    PluginGuiService.DescendantRemoving:Connect(function(Frame)
-        if Frame:IsA("GuiObject") then
-            self:AddContext(Frame)
-        end
+    pcall(function()
+        local PluginGuiService = game:GetService("PluginGuiService")
+        PluginGuiService.DescendantAdded:Connect(function(Frame)
+            if Frame:IsA("GuiObject") then
+                self:AddContext(Frame)
+            end
+        end)
+        PluginGuiService.DescendantRemoving:Connect(function(Frame)
+            if Frame:IsA("GuiObject") then
+                self:AddContext(Frame)
+            end
+        end)
     end)
 end
 
