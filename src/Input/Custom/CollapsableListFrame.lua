@@ -43,6 +43,7 @@ function CollapsableListFrame:__new()
     self:DisableChangeReplication("ElementList")
     self:DisableChangeReplication("SelectionList")
     self:DisableChangeReplication("SelectionListEntry")
+    self:DisableChangeReplication("UpdateElementList")
 
     --Create the frames.
     self.BackgroundColor3 = Enum.StudioStyleGuideColor.TableItem
