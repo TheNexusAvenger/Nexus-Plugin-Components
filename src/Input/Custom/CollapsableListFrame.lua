@@ -83,7 +83,11 @@ function CollapsableListFrame:__new()
 
                 --Update the entries.
                 if self.ElementList and self.SelectionList then
-                    self.ElementList:SetEntries(self.SelectionList:GetDescendants())
+                    if self.UpdateElementList then
+                        self.UpdateElementList()
+                    else
+                        self.ElementList:SetEntries(self.SelectionList:GetDescendants())
+                    end
                 end
             end
             wait()
@@ -122,11 +126,15 @@ function CollapsableListFrame:__new()
                     else
                         LastClickTime = tick()
                     end
-                else
+                elseif List then
                     --Toggle the selection.
                     List:ToggleSelection(Entry)
-                    if self.ElementList and self.SelectionList then
-                        self.ElementList:SetEntries(self.SelectionList:GetDescendants())
+                    if self.ElementList then
+                        if self.UpdateElementList then
+                            self.UpdateElementList()
+                        else
+                            self.ElementList:SetEntries(List:GetDescendants())
+                        end
                     end
                     LastClickTime = tick()
                 end
