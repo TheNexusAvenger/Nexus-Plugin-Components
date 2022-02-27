@@ -11,6 +11,9 @@ theme:
 
 nav:
   - Home: index.md
+  - Examples:
+    - Noraml Instances: examples/normal-instances.md
+    - Lists: examples/lists.md
 
 markdown_extensions:
   - admonition
