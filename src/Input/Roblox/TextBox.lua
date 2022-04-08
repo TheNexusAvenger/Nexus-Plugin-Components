@@ -22,6 +22,7 @@ function TextBox:__new()
     --Add the Disabled property.
     self:DisableChangeReplication("Disabled")
     self:GetPropertyChangedSignal("Disabled"):Connect(function()
+        self.Active = not self.Disabled
         if self.Disabled then
             self:ReleaseFocus()
         end

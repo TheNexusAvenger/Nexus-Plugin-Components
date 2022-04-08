@@ -21,6 +21,7 @@ local CLASS_NAME_TO_PATH = {
     --Custom.
     CollapsableListFrame = "Input.Custom.CollapsableListFrame",
     PluginToggleButton = "Input.Custom.PluginToggleButton",
+    Slider = "Input.Custom.Slider",
 }
 
 

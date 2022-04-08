@@ -57,14 +57,11 @@ end
 Invoked when an input is began.
 --]]
 function WrappedUserInputService:OnInputBegan(InputObject, Processed)
-    --Return if it was processed.
-    if Processed then return end
-
     --Fire the event if it new.
     local LastTime = self.LastInputBeganTimes[InputObject.KeyCode] or 0
     local CurrentTime = tick()
     if CurrentTime - LastTime >= INPUT_DELAY_TIME then
-        self.InputBegan:Fire(InputObject)
+        self.InputBegan:Fire(InputObject, Processed)
     end
 
     --Store the last time.
@@ -75,14 +72,11 @@ end
 Invoked when an input is changed.
 --]]
 function WrappedUserInputService:OnInputChanged(InputObject, Processed)
-    --Return if it was processed.
-    if Processed then return end
-
     --Fire the event if it new.
     local LastTime = self.LastInputChangedTimes[InputObject.KeyCode] or 0
     local CurrentTime = tick()
     if CurrentTime - LastTime >= INPUT_DELAY_TIME then
-        self.InputChanged:Fire(InputObject)
+        self.InputChanged:Fire(InputObject, Processed)
     end
 
     --Store the last time.
@@ -93,14 +87,11 @@ end
 Invoked when an input is ended.
 --]]
 function WrappedUserInputService:OnInputEnded(InputObject, Processed)
-    --Return if it was processed.
-    if Processed then return end
-
     --Fire the event if it new.
     local LastTime = self.LastInputEndedTimes[InputObject.KeyCode] or 0
     local CurrentTime = tick()
     if CurrentTime - LastTime >= INPUT_DELAY_TIME then
-        self.InputEnded:Fire(InputObject)
+        self.InputEnded:Fire(InputObject, Processed)
     end
 
     --Store the last time.
