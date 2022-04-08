@@ -19,6 +19,7 @@ local CLASS_NAME_TO_PATH = {
     TextBox = "Input.Roblox.TextBox",
 
     --Custom.
+    Checkbox = "Input.Custom.Checkbox",
     CollapsableListFrame = "Input.Custom.CollapsableListFrame",
     PluginToggleButton = "Input.Custom.PluginToggleButton",
     Slider = "Input.Custom.Slider",
