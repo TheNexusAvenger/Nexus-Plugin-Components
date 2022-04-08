@@ -69,7 +69,6 @@ function Slider:__new()
     self:GetPropertyChangedSignal("Disabled"):Connect(function()
         SliderButton.Disabled = self.Disabled
         self:SetAllColorModifiers(self.Disabled and Enum.StudioStyleGuideModifier.Disabled or Enum.StudioStyleGuideModifier.Default)
-        SliderBar:SetAllColorModifiers(self.Disabled and Enum.StudioStyleGuideModifier.Disabled or Enum.StudioStyleGuideModifier.Default)
         if self.TextBox then
             self.TextBox.Disabled = self.Disabled
         end
