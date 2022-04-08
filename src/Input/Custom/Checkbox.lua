@@ -31,6 +31,7 @@ function Checkbox:__new()
     self.BackgroundColor3 = Enum.StudioStyleGuideColor.CheckedFieldBackground
     self.BorderColor3 = Enum.StudioStyleGuideColor.CheckedFieldBorder
     self.TextColor3 = Enum.StudioStyleGuideColor.CheckedFieldIndicator
+    self.Font = Enum.Font.Code
 
     --Add the value property.
     self:GetPropertyChangedSignal("Value"):Connect(function()
