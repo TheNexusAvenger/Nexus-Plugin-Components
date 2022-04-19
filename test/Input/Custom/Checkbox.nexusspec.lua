@@ -25,7 +25,7 @@ NexusUnitTesting:RegisterUnitTest(CheckboxTest.new("Value"):SetRun(function(self
     --Assert that the checked text is valid.
     self.CuT.Value = "Checked"
     wait()
-    self:AssertEquals(self.CuT.Text, "✔")
+    self:AssertEquals(self.CuT.Text, "✓")
 
     --Assert that the unchecked text is valid.
     self.CuT.Value = "Unchecked"
@@ -54,7 +54,7 @@ NexusUnitTesting:RegisterUnitTest(CheckboxTest.new("Toggle"):SetRun(function(sel
     self.CuT:Toggle()
     wait()
     self:AssertEquals(self.CuT.Value, "Checked")
-    self:AssertEquals(self.CuT.Text, "✔")
+    self:AssertEquals(self.CuT.Text, "✓")
 
     --Assert toggling from the Mixed stated leads to the Unchecked state.
     self.CuT.Value = "Mixed"
