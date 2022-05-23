@@ -1,0 +1,15 @@
+{
+    "name": "Nexus-Plugin-Components",
+    "tree": {
+        "$className": "DataModel",
+        "ReplicatedStorage": {
+            "$className": "ReplicatedStorage",
+            "NexusPluginComponents": {
+                "$path": "."
+            },
+            "NexusPluginComponents.nexusspec": {
+                "$path": "./test"
+            }
+        }
+    }
+}
