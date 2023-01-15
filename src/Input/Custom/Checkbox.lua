@@ -3,6 +3,7 @@ TheNexusAvenger
 
 Custom checkbox button input.
 --]]
+--!strict
 
 local STATE_TEXT = {
     Checked = "✓",
@@ -12,19 +13,26 @@ local STATE_TEXT = {
 
 
 
-local NexusPluginComponents = require(script.Parent.Parent.Parent)
-
-local PluginInstance = NexusPluginComponents:GetResource("Base.PluginInstance")
+local NexusPluginComponents = script.Parent.Parent.Parent
+local PluginInstance = require(NexusPluginComponents:WaitForChild("Base"):WaitForChild("PluginInstance"))
 
 local Checkbox = PluginInstance:Extend()
 Checkbox:SetClassName("Checkbox")
+
+export type Checkbox = {
+    new: () -> (Checkbox),
+    Extend: (self: Checkbox) -> (Checkbox),
+
+    Value: "Unchecked" | "Checked" | "Mixed" | string,
+    Toggle: (self: Checkbox) -> (),
+} & PluginInstance.PluginInstance & TextButton
 
 
 
 --[[
 Creates the Checkbox.
 --]]
-function Checkbox:__new()
+function Checkbox:__new(): ()
     PluginInstance.__new(self, "TextButton")
 
     --Set the defaults.
@@ -34,7 +42,7 @@ function Checkbox:__new()
     self.Font = Enum.Font.Legacy
 
     --Add the value property.
-    self:GetPropertyChangedSignal("Value"):Connect(function()
+    self:AddPropertyFinalizer("Value", function(Value: string): ()
         self.Text = STATE_TEXT[self.Value] or "?"
     end)
     self:DisableChangeReplication("Value")
@@ -46,7 +54,7 @@ function Checkbox:__new()
         if DB then
             DB = false
             self:Toggle()
-            wait()
+            task.wait()
             DB = true
         end
     end)
@@ -55,7 +63,7 @@ end
 --[[
 Toggles the checkbox.
 --]]
-function Checkbox:Toggle()
+function Checkbox:Toggle(): ()
     if self.Value == "Unchecked" then
         self.Value = "Checked"
     else
@@ -65,4 +73,4 @@ end
 
 
 
-return Checkbox
+return (Checkbox :: any) :: Checkbox

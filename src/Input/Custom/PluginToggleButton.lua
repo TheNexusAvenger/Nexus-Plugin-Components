@@ -3,20 +3,25 @@ TheNexusAvenger
 
 Toggle button for a PluginGui.
 --]]
+--!strict
 
-local NexusPluginComponents = require(script.Parent.Parent.Parent)
-
-local PluginInstance = NexusPluginComponents:GetResource("Base.PluginInstance")
+local NexusPluginComponents = script.Parent.Parent.Parent
+local PluginInstance = require(NexusPluginComponents:WaitForChild("Base"):WaitForChild("PluginInstance"))
 
 local PluginToggleButton = PluginInstance:Extend()
 PluginToggleButton:SetClassName("PluginToggleButton")
+
+export type PluginToggleButton = {
+    new: (Button: PluginToolbarButton, PluginGui: PluginGui) -> (PluginToggleButton),
+    Extend: (self: PluginToggleButton) -> (PluginToggleButton),
+} & PluginInstance.PluginInstance & TextBox
 
 
 
 --[[
 Creates the Plugin Toggle Button.
 --]]
-function PluginToggleButton:__new(Button, PluginGui)
+function PluginToggleButton:__new(Button: PluginToolbarButton, PluginGui: PluginGui): ()
     PluginInstance.__new(self, Button)
 
     --Set up the changed event.
@@ -31,7 +36,7 @@ function PluginToggleButton:__new(Button, PluginGui)
             DB = false
             PluginGui.Enabled = not PluginGui.Enabled
             self:SetActive(PluginGui.Enabled)
-            wait()
+            task.wait()
             DB = true
         end
     end)
@@ -42,4 +47,4 @@ end
 
 
 
-return PluginToggleButton
+return (PluginToggleButton :: any) :: PluginToggleButton

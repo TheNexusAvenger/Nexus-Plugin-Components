@@ -9,7 +9,7 @@ local NexusPluginComponentsModule = game.ReplicatedStorage:WaitForChild("NexusPl
 local NexusPluginComponents = require(NexusPluginComponentsModule)
 
 return function()
-    describe("An text button", function()
+    describe("A text button", function()
         it("should become disabled.", function()
             local TestButton = NexusPluginComponents.new("TextButton")
             expect(TestButton.AutoButtonColor).to.equal(true)

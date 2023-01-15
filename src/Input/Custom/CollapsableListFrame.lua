@@ -4,6 +4,7 @@ TheNexusAvenger
 List frame that can be expanded and collapsed.
 Intended to be used with ElementList and SelectionList.
 --]]
+--!strict
 
 local DOUBLE_CLICK_MAX_TIME = 0.5
 local EXPANDED_ARROW_IMAGE = "rbxasset://textures/StudioToolbox/ArrowDownIconWhite.png"
@@ -12,20 +13,30 @@ local ARROW_RELATIVE_SIZE = (10 / 20) * (54 / 38)
 
 
 
-local NexusPluginComponents = require(script.Parent.Parent.Parent)
-
-local PluginInstance = NexusPluginComponents:GetResource("Base.PluginInstance")
-local NexusEvent = NexusPluginComponents:GetResource("NexusInstance.Event.NexusEvent")
+local NexusPluginComponents = script.Parent.Parent.Parent
+local PluginInstance = require(NexusPluginComponents:WaitForChild("Base"):WaitForChild("PluginInstance"))
+local NexusEvent = require(NexusPluginComponents:WaitForChild("NexusInstance"):WaitForChild("Event"):WaitForChild("NexusEvent"))
 
 local CollapsableListFrame = PluginInstance:Extend()
 CollapsableListFrame:SetClassName("CollapsableListFrame")
+
+export type CollapsableListFrame = {
+    new: () -> (CollapsableListFrame),
+    Extend: (self: CollapsableListFrame) -> (CollapsableListFrame),
+
+    DoubleClicked: NexusEvent.NexusEvent<>,
+    DelayClicked: NexusEvent.NexusEvent<>,
+    ArrowVisible: boolean,
+    CurrentOffset: Vector2,
+    Update: (self: CollapsableListFrame, Data: any) -> (),
+} & PluginInstance.PluginInstance & Frame
 
 
 
 --[[
 Creates the collapsable list frame.
 --]]
-function CollapsableListFrame:__new()
+function CollapsableListFrame:__new(): ()
     PluginInstance.__new(self, "Frame")
 
     --Craete the events.
@@ -91,7 +102,7 @@ function CollapsableListFrame:__new()
                     end
                 end
             end
-            wait()
+            task.wait()
             DB = true
         end
     end)
@@ -123,7 +134,7 @@ function CollapsableListFrame:__new()
                         else
                             self.DelayClicked:Fire()
                         end
-                        LastClickTime = nil
+                        LastClickTime = nil :: any
                     else
                         LastClickTime = tick()
                     end
@@ -140,7 +151,7 @@ function CollapsableListFrame:__new()
                     LastClickTime = tick()
                 end
             end
-            wait()
+            task.wait()
             DB = true
         end
     end)
@@ -156,7 +167,7 @@ end
 --[[
 Updates the colors of the container.
 --]]
-function CollapsableListFrame:UpdateColors()
+function CollapsableListFrame:UpdateColors(): ()
     local Entry = self.SelectionListEntry
     if not Entry or not Entry.Selectable or (not Entry.Selected and not self.Hovering) then
         self.BackgroundTransparency = 1
@@ -169,7 +180,7 @@ end
 --[[
 Updates the size of the frame.
 --]]
-function CollapsableListFrame:UpdateSize()
+function CollapsableListFrame:UpdateSize(): ()
     local SizeY = self.AbsoluteSize.Y
     local ArrowSize = SizeY * ARROW_RELATIVE_SIZE
     local Indent = (self.SelectionListEntry and self.SelectionListEntry.Indent and self.SelectionListEntry.Indent - 1 or 0)
@@ -181,7 +192,7 @@ end
 --[[
 Updates the arrow.
 --]]
-function CollapsableListFrame:UpdateArrow()
+function CollapsableListFrame:UpdateArrow(): ()
     local Entry = self.SelectionListEntry
     self.Arrow.Visible = self.ArrowVisible and (Entry and #Entry.Children > 0)
     self.Arrow.Image = ((Entry and Entry.Expanded) and EXPANDED_ARROW_IMAGE or COLLAPSED_ARROW_IMAGE)
@@ -190,7 +201,7 @@ end
 --[[
 Updates the list.
 --]]
-function CollapsableListFrame:Update(Data)
+function CollapsableListFrame:Update(Data: any): ()
     --Hide the frame if there is no data.
     self.SelectionListEntry = Data
     self.Visible = (Data ~= nil)
@@ -206,4 +217,4 @@ end
 
 
 
-return CollapsableListFrame
+return (CollapsableListFrame :: any) :: CollapsableListFrame

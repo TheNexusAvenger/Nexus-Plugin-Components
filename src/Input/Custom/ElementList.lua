@@ -3,20 +3,31 @@ TheNexusAvenger
 
 Manages displaying a list of elements so only the visible elements are shown.
 --]]
+--!strict
 
-local NexusPluginComponents = require(script.Parent.Parent.Parent)
-
-local PluginInstance = NexusPluginComponents:GetResource("Base.PluginInstance")
+local NexusPluginComponents = script.Parent.Parent.Parent
+local PluginInstance = require(NexusPluginComponents:WaitForChild("Base"):WaitForChild("PluginInstance"))
 
 local ElementList = PluginInstance:Extend()
 ElementList:SetClassName("ElementList")
+
+export type ElementList = {
+    new: (EntryClass: any) -> (ElementList),
+    Extend: (self: ElementList) -> (ElementList),
+
+    CreateEntry: () -> (any) | {new: () -> (any)},
+    EntryHeight: number,
+    CurrentWidth: number,
+    SetEntries: (self: ElementList, Entries: {any}) -> (),
+    ConnectScrollingFrame: (self: ElementList, ScrollingFrame: ScrollingFrame) -> (),
+} & PluginInstance.PluginInstance & Frame
 
 
 
 --[[
 Creates the Element List.
 --]]
-function ElementList:__new(EntryClass)
+function ElementList:__new(EntryClass: any): ()
     PluginInstance.__new(self, "Frame")
 
     --Set up the container.
@@ -61,7 +72,7 @@ end
 --[[
 Updates the size and position of the adorn.
 --]]
-function ElementList:UpdateAdornSize()
+function ElementList:UpdateAdornSize(): ()
     self.AdornFrame.Size = UDim2.new(self.CurrentWidth == 0 and 1 or 0, self.CurrentWidth, 0, self.EntryHeight)
     self.AdornFrame.Position = UDim2.new(0, -self.CurrentOffset.X, 0, -(self.CurrentOffset.Y % self.EntryHeight))
 
@@ -73,7 +84,7 @@ end
 --[[
 Updates the total frames.
 --]]
-function ElementList:UpdateTotalFrames()
+function ElementList:UpdateTotalFrames(): ()
     self:UpdateAdornSize()
 
     --Create the entries.
@@ -100,7 +111,7 @@ end
 --[[
 Updates the contents of the frames.
 --]]
-function ElementList:UpdateFrameContents(Force)
+function ElementList:UpdateFrameContents(Force: boolean?): ()
     --Update the existing frames if it is forced or the start index changed.
     local StartIndex = math.floor(self.CurrentOffset.Y / self.EntryHeight)
     local RequiredEntries = math.ceil(self.AbsoluteSize.Y / self.EntryHeight) + 1
@@ -120,7 +131,7 @@ end
 --[[
 Sets the entries to display.
 --]]
-function ElementList:SetEntries(Entries)
+function ElementList:SetEntries(Entries: {any}): ()
     self.DataEntries = Entries
     self:UpdateFrameContents(true)
 end
@@ -128,7 +139,7 @@ end
 --[[
 Updates the ScrollingFrame attachment values.
 --]]
-function ElementList:UpdateScrollingFrameProperties()
+function ElementList:UpdateScrollingFrameProperties(): ()
     --Return if no ScrollingFrame is connected.
     local ScrollingFrame = self.AttachedScrollingFrame
     if not self.AttachedScrollingFrame then return end
@@ -143,7 +154,7 @@ end
 --[[
 Connects a ScrollingFrame to the element list.
 --]]
-function ElementList:ConnectScrollingFrame(ScrollingFrame)
+function ElementList:ConnectScrollingFrame(ScrollingFrame: ScrollingFrame): ()
     self.AttachedScrollingFrame = ScrollingFrame
     self.AttachedScrollingFrame.Changed:Connect(function()
         self:UpdateScrollingFrameProperties()
@@ -157,4 +168,4 @@ end
 
 
 
-return ElementList
+return (ElementList :: any) :: ElementList

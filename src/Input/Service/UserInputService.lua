@@ -4,17 +4,27 @@ TheNexusAvenger
 Service for managing user input. The UserInputService directly does
 not work with key inputs in plugin windows.
 --]]
+--!strict
 
 local INPUT_DELAY_TIME = 0.05
 
 
-
-local NexusPluginComponents = require(script.Parent.Parent.Parent)
-local NexusEvent = NexusPluginComponents:GetResource("NexusInstance.Event.NexusEvent")
-local NexusObject = NexusPluginComponents:GetResource("NexusInstance.NexusObject")
+local NexusPluginComponents = script.Parent.Parent.Parent
+local NexusObject = require(NexusPluginComponents:WaitForChild("NexusInstance"):WaitForChild("NexusObject"))
+local NexusEvent = require(NexusPluginComponents:WaitForChild("NexusInstance"):WaitForChild("Event"):WaitForChild("NexusEvent"))
 
 local WrappedUserInputService = NexusObject:Extend()
 WrappedUserInputService:SetClassName("WrappedUserInputService")
+
+export type PluginUserInputService = {
+    new: () -> (PluginUserInputService),
+    Extend: (self: PluginUserInputService) -> (PluginUserInputService),
+
+    InputBegan: NexusEvent.NexusEvent<InputObject, boolean>,
+    InputChanged: NexusEvent.NexusEvent<InputObject, boolean>,
+    InputEnded: NexusEvent.NexusEvent<InputObject, boolean>,
+    IsKeyDown: (self: PluginUserInputService, KeyCode: Enum.KeyCode) -> (boolean)
+} & NexusObject.NexusObject
 
 
 
@@ -57,7 +67,7 @@ end
 --[[
 Invoked when an input is began.
 --]]
-function WrappedUserInputService:OnInputBegan(InputObject, Processed)
+function WrappedUserInputService:OnInputBegan(InputObject: InputObject, Processed: boolean): ()
     --Fire the event if it new.
     local LastTime = self.LastInputBeganTimes[InputObject.KeyCode] or 0
     local CurrentTime = tick()
@@ -72,7 +82,7 @@ end
 --[[
 Invoked when an input is changed.
 --]]
-function WrappedUserInputService:OnInputChanged(InputObject, Processed)
+function WrappedUserInputService:OnInputChanged(InputObject: InputObject, Processed: boolean): ()
     --Fire the event if it new.
     local LastTime = self.LastInputChangedTimes[InputObject.KeyCode] or 0
     local CurrentTime = tick()
@@ -87,7 +97,7 @@ end
 --[[
 Invoked when an input is ended.
 --]]
-function WrappedUserInputService:OnInputEnded(InputObject, Processed)
+function WrappedUserInputService:OnInputEnded(InputObject: InputObject, Processed: boolean): ()
     --Fire the event if it new.
     local LastTime = self.LastInputEndedTimes[InputObject.KeyCode] or 0
     local CurrentTime = tick()
@@ -102,7 +112,7 @@ end
 --[[
 Returns if a key is down.
 --]]
-function WrappedUserInputService:IsKeyDown(KeyCode)
+function WrappedUserInputService:IsKeyDown(KeyCode: Enum.KeyCode): boolean
     --Return false if the key was not pressed.
     local LastTimeDown = self.LastInputBeganTimes[KeyCode]
     if not LastTimeDown then return false end
@@ -115,7 +125,7 @@ end
 --[[
 Adds a context for getting inputs.
 --]]
-function WrappedUserInputService:AddContext(Frame)
+function WrappedUserInputService:AddContext(Frame: Frame): ()
     --Return if the events already exist.
     if self.ContextEvents[Frame] then return end
 
@@ -138,7 +148,7 @@ end
 --[[
 Removes a context for getting inputs.
 --]]
-function WrappedUserInputService:RemoveContext(Frame)
+function WrappedUserInputService:RemoveContext(Frame: Frame): ()
     --Disconnect the events.
     local Events = self.ContextEvents[Frame]
     if not Events then return end
@@ -151,4 +161,4 @@ end
 
 
 
-return WrappedUserInputService.new()
+return WrappedUserInputService.new() :: PluginUserInputService

@@ -3,22 +3,35 @@ TheNexusAvenger
 
 Custom slider input for scaling number values.
 --]]
+--!strict
 
-local NexusPluginComponents = require(script.Parent.Parent.Parent)
-
-local PluginInstance = NexusPluginComponents:GetResource("Base.PluginInstance")
-local PluginColor = NexusPluginComponents:GetResource("Base.PluginColor")
-local UserInputService = NexusPluginComponents:GetResource("Input.Service.UserInputService")
+local NexusPluginComponents = script.Parent.Parent.Parent
+local PluginInstance = require(NexusPluginComponents:WaitForChild("Base"):WaitForChild("PluginInstance"))
+local PluginColor = require(NexusPluginComponents:WaitForChild("Base"):WaitForChild("PluginColor"))
+local TextButton = require(NexusPluginComponents:WaitForChild("Input"):WaitForChild("Roblox"):WaitForChild("TextButton"))
+local TextBox = require(NexusPluginComponents:WaitForChild("Input"):WaitForChild("Roblox"):WaitForChild("TextBox"))
+local UserInputService = require(NexusPluginComponents:WaitForChild("Input"):WaitForChild("Service"):WaitForChild("UserInputService"))
 
 local Slider = PluginInstance:Extend()
 Slider:SetClassName("Slider")
+
+export type Slider = {
+    new: () -> (Slider),
+    Extend: (self: Slider) -> (Slider),
+
+    Value: number,
+    MinimumValue: number,
+    MaximumValue: number,
+    ValueIncrement: number,
+    ConnectTextBox: (self: Slider, TextBox: TextBox.PluginTextBox) -> (),
+} & PluginInstance.PluginInstance & Frame
 
 
 
 --[[
 Formats the number for a text box.
 --]]
-local function FormatNumber(Number)
+local function FormatNumber(Number: number): string
     local Text = string.format("%.3f", Number)
     Text = string.match(Text, "(%-?%d-)%.0+$") or string.match(Text, "(%-?[%d%.]-)0+$") or Text
     return Text
@@ -34,7 +47,7 @@ function Slider:__new()
     self.BackgroundTransparency = 1
 
     --Create the frames.
-    local SliderBar = NexusPluginComponents.new("Frame")
+    local SliderBar = PluginInstance.new("Frame")
     SliderBar.BorderColor3 = PluginColor.new(Enum.StudioStyleGuideColor.TitlebarText, Enum.StudioStyleGuideModifier.Disabled)
     SliderBar.BorderSizePixel = 1
     SliderBar.Size = UDim2.new(1, 0, 0, 0)
@@ -43,7 +56,7 @@ function Slider:__new()
     self:DisableChangeReplication("SliderBar")
     self.SliderBar = SliderBar
 
-    local SliderButton = NexusPluginComponents.new("TextButton")
+    local SliderButton = TextButton.new("TextButton")
     SliderButton.BackgroundColor3 = Enum.StudioStyleGuideColor.Button
     SliderButton.BorderColor3 = Enum.StudioStyleGuideColor.Border
     SliderButton.Size = UDim2.new(0, 8, 1, 0)
@@ -63,7 +76,7 @@ function Slider:__new()
     self.ValueIncrement = 0.001
 
     --Add the Disabled property.
-    local DragEvents = {}
+    local DragEvents = {} :: {RBXScriptConnection}
     self:DisableChangeReplication("TextBox")
     self:DisableChangeReplication("Disabled")
     self:GetPropertyChangedSignal("Disabled"):Connect(function()
@@ -72,7 +85,7 @@ function Slider:__new()
         if self.TextBox then
             self.TextBox.Disabled = self.Disabled
         end
-        for _, Event in pairs(DragEvents) do
+        for _, Event in DragEvents do
             Event:Disconnect()
         end
     end)
@@ -96,8 +109,8 @@ function Slider:__new()
     end)
 
     --Connect dragging.
-    SliderButton.MouseButton1Down:Connect(function(StartX, StartY)
-        for _, Event in pairs(DragEvents) do
+    SliderButton.MouseButton1Down:Connect(function(StartX: number, StartY: number): ()
+        for _, Event in DragEvents do
             Event:Disconnect()
         end
         DragEvents = {}
@@ -114,7 +127,7 @@ function Slider:__new()
 
         --Connect moving the mouse.
         local XOffset = SliderButton.AbsolutePosition.X - StartX
-        table.insert(DragEvents, InputParent.InputChanged:Connect(function(Input)
+        table.insert(DragEvents, InputParent.InputChanged:Connect(function(Input: InputObject): ()
             if Input.UserInputType ~= Enum.UserInputType.MouseMovement then return end
             local PositionX = Input.Position.X + XOffset
             local NewPercent = math.clamp((PositionX - self.AbsolutePosition.X) / math.max(1, self.AbsoluteSize.X - 8), 0, 1)
@@ -123,9 +136,9 @@ function Slider:__new()
         end))
 
         --Connect releasing the mouse.
-        table.insert(DragEvents, UserInputService.InputEnded:Connect(function(Input)
+        table.insert(DragEvents, UserInputService.InputEnded:Connect(function(Input: InputObject): ()
             if Input.UserInputType ~= Enum.UserInputType.MouseButton1 then return end
-            for _, Event in pairs(DragEvents) do
+            for _, Event in DragEvents do
                 Event:Disconnect()
             end
         end))
@@ -135,7 +148,7 @@ end
 --[[
 Updates the slider position.
 --]]
-function Slider:UpdatePosition()
+function Slider:UpdatePosition(): ()
     local SliderPercent = math.clamp((self.Value - self.MinimumValue) / (self.MaximumValue - self.MinimumValue), 0, 1)
     local SliderWidth = math.max(8, self.AbsoluteSize.X - 8)
     self.SliderButton.Position = UDim2.new(0, SliderPercent * SliderWidth, 0, 0)
@@ -144,7 +157,7 @@ end
 --[[
 Connects a TextBox to the slider.
 --]]
-function Slider:ConnectTextBox(TextBox)
+function Slider:ConnectTextBox(TextBox: TextBox.PluginTextBox): ()
     --Set the initial value.
     TextBox.Text = FormatNumber(self.Value)
     TextBox.Disabled = self.Disabled
@@ -176,4 +189,4 @@ end
 
 
 
-return Slider
+return (Slider :: any) :: Slider
