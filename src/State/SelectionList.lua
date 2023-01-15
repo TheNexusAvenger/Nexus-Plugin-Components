@@ -3,21 +3,37 @@ TheNexusAvenger
 
 Manages the state of a collapsable list.
 --]]
+--!strict
 
-local NexusPluginComponents = require(script.Parent.Parent)
-
-local NexusInstance = NexusPluginComponents:GetResource("NexusInstance.NexusInstance")
-local UserInputService = NexusPluginComponents:GetResource("Input.Service.UserInputService")
+local NexusPluginComponents = script.Parent.Parent
+local NexusInstance = require(NexusPluginComponents:WaitForChild("NexusInstance"):WaitForChild("NexusInstance"))
+local UserInputService = require(NexusPluginComponents:WaitForChild("Input"):WaitForChild("Service"):WaitForChild("UserInputService"))
 
 local SelectionList = NexusInstance:Extend()
 SelectionList:SetClassName("SelectionList")
+
+export type SelectionList = {
+    new: () -> (SelectionList),
+    Extend: (self: SelectionList) -> (SelectionList),
+
+    Selected: boolean,
+    Selectable: boolean,
+    Expanded: boolean,
+    Find: (self: SelectionList, Child: SelectionList) -> (number?),
+    CreateChild: (self: SelectionList) -> (SelectionList),
+    AddChild: (self: SelectionList, Child: SelectionList) -> (),
+    RemoveChild: (self: SelectionList, Child: SelectionList) -> (),
+    GetSelection: (self: SelectionList) -> ({SelectionList}),
+    SetSelection: (self: SelectionList, Selection: {SelectionList}) -> (),
+    ToggleSelection: (self: SelectionList, Entry: SelectionList) -> (),
+} & NexusInstance.NexusInstance
 
 
 
 --[[
 Creates the Selection List.
 --]]
-function SelectionList:__new()
+function SelectionList:__new(): ()
     NexusInstance.__new(self)
 
     self.Selected = false
@@ -29,18 +45,19 @@ end
 --[[
 Returns the index of a child.
 --]]
-function SelectionList:Find(Child)
-    for i, OtherChild in pairs(self.Children) do
+function SelectionList:Find(Child: SelectionList): number?
+    for i, OtherChild in self.Children do
         if Child == OtherChild then
             return i
         end
     end
+    return nil
 end
 
 --[[
 Creates a child entry.
 --]]
-function SelectionList:CreateChild()
+function SelectionList:CreateChild(): SelectionList
     local Child = SelectionList.new()
     Child.Indent = (self.Indent or 0) + 1
     table.insert(self.Children, Child)
@@ -50,7 +67,7 @@ end
 --[[
 Adds an existing child entry.
 --]]
-function SelectionList:AddChild(Child)
+function SelectionList:AddChild(Child: SelectionList): ()
     --Return if the child exists.
     if self:Find(Child) then
         return
@@ -63,7 +80,7 @@ end
 --[[
 Removes a child entry.
 --]]
-function SelectionList:RemoveChild(Child)
+function SelectionList:RemoveChild(Child: SelectionList): ()
     --Get the index of the child and return if the child does not exist.
     local Index = self:Find(Child)
     if not Index then
@@ -85,9 +102,9 @@ function SelectionList:GetDescendants(IncludeNotExpanded)
 
     --Get and return the descendants.
     local Descendants = {}
-    for _, Child in pairs(self.Children) do
+    for _, Child in self.Children do
         table.insert(Descendants, Child)
-        for _, SubChild in pairs(Child:GetDescendants()) do
+        for _, SubChild in Child:GetDescendants() do
             table.insert(Descendants, SubChild)
         end
     end
@@ -97,9 +114,9 @@ end
 --[[
 Gets the selected entries.
 --]]
-function SelectionList:GetSelection()
+function SelectionList:GetSelection(): {SelectionList}
     local SelectedEntries = {}
-    for _, Entry in pairs(self:GetDescendants(true)) do
+    for _, Entry in self:GetDescendants(true) do
         if Entry.Selected then
             table.insert(SelectedEntries, Entry)
         end
@@ -110,23 +127,23 @@ end
 --[[
 Sets the selected entries.
 --]]
-function SelectionList:SetSelection(Selection)
+function SelectionList:SetSelection(Selection: {SelectionList}): ()
     --Create a lookup for the selection.
     Selection = Selection or {}
     local SelectionLookup = {}
-    for _, Entry in pairs(Selection) do
+    for _, Entry in Selection do
         SelectionLookup[Entry] = true
     end
 
     --Unselect the selected frames.
-    for _, Entry in pairs(self:GetSelection()) do
+    for _, Entry in self:GetSelection() do
         if not SelectionLookup[Entry] then
             Entry.Selected = false
         end
     end
 
     --Select the new entries.
-    for _, Entry in pairs(Selection) do
+    for _, Entry in Selection do
         Entry.Selected = true
     end
 end
@@ -134,7 +151,7 @@ end
 --[[
 Toggles an entry being selected.
 --]]
-function SelectionList:ToggleSelection(Entry)
+function SelectionList:ToggleSelection(Entry: SelectionList): ()
     --Determine the inputs.
     local ControlDown = UserInputService:IsKeyDown(Enum.KeyCode.LeftControl) or UserInputService:IsKeyDown(Enum.KeyCode.RightControl)
     local ShiftDown = UserInputService:IsKeyDown(Enum.KeyCode.LeftShift) or UserInputService:IsKeyDown(Enum.KeyCode.RightShift)
