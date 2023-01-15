@@ -3,6 +3,7 @@ TheNexusAvenger
 
 Wrapped plugin instance with additional functionality.
 --]]
+--!strict
 
 local INSTANCE_CREATION_PRESETS = {
     Frame = {
@@ -54,10 +55,9 @@ local INSTANCE_CREATION_PRESETS = {
 
 
 
-local NexusPluginComponents = require(script.Parent.Parent)
-
-local NexusWrappedInstance = NexusPluginComponents:GetResource("NexusWrappedInstance")
-local PluginColor = NexusPluginComponents:GetResource("Base.PluginColor")
+local NexusPluginComponents = script.Parent.Parent
+local NexusWrappedInstance = require(NexusPluginComponents:WaitForChild("NexusWrappedInstance"))
+local PluginColor = require(NexusPluginComponents:WaitForChild("Base"):WaitForChild("PluginColor"))
 
 local PluginInstance = NexusWrappedInstance:Extend()
 PluginInstance:SetClassName("PluginInstance")
@@ -66,12 +66,20 @@ pcall(function()
     PluginInstance.Settings = settings()
 end)
 
+export type PluginInstance = {
+    new: (InstanceToWrap: Instance | string) -> (PluginInstance),
+    Extend: (self: PluginInstance) -> (PluginInstance),
+
+    SetColorModifier: (self: PluginInstance, PropertyName: string, Modifier: string | Enum.StudioStyleGuideModifier) -> (),
+    SetAllColorModifiers: (self: PluginInstance, Modifier: string | Enum.StudioStyleGuideModifier) -> (),
+} & NexusWrappedInstance.NexusWrappedInstance
+
 
 
 --[[
 Creates the plugin instance.
 --]]
-function PluginInstance:__new(InstanceToWrap)
+function PluginInstance:__new(InstanceToWrap: Instance | string): ()
     NexusWrappedInstance.__new(self, InstanceToWrap)
 
     --Set up the color property storage.
@@ -85,7 +93,7 @@ function PluginInstance:__new(InstanceToWrap)
     local ColorProperties = self.ColorProperties[WrappedClassName]
 
     --Connect colors being changed.
-    self:AddGenericPropertyValidator(function(Name, Value)
+    self:AddGenericPropertyValidator(function(Name: string, Value: any): any
         --Determine if the property is a Color3.
         if ColorProperties[Name] == nil then
             xpcall(function()
@@ -99,7 +107,7 @@ function PluginInstance:__new(InstanceToWrap)
 
         --Return the PluginColor or the original value.
         if ColorProperties[Name] and typeof(Value) ~= "Color3" and (typeof(Value) == "string" or typeof(Value) == "EnumItem") then
-            return PluginColor.new(Value)
+            return PluginColor.new(Value :: Enum.StudioStyleGuideColor | string)
         end
         return Value
     end)
@@ -131,7 +139,7 @@ end
 Updates the modifier of a plugin color. If a PluginColor is not
 in use, there will be no effect.
 --]]
-function PluginInstance:SetColorModifier(PropertyName, Modifier)
+function PluginInstance:SetColorModifier(PropertyName: string, Modifier: string | Enum.StudioStyleGuideModifier): ()
     Modifier = Modifier or Enum.StudioStyleGuideModifier.Default
 
     --Return if the color isn't a PluginColor.
@@ -152,8 +160,8 @@ end
 --[[
 Sets all the color modifiers of the plugin colors.
 --]]
-function PluginInstance:SetAllColorModifiers(Modifier)
-    for PropertyName, IsColorProperty in pairs(self.ColorProperties[self.WrappedClassName]) do
+function PluginInstance:SetAllColorModifiers(Modifier: string | Enum.StudioStyleGuideModifier): ()
+    for PropertyName, IsColorProperty in self.ColorProperties[self.WrappedClassName] do
         if IsColorProperty then
             self:SetColorModifier(PropertyName, Modifier)
         end
@@ -163,7 +171,7 @@ end
 --[[
 Converts a property for replicating to the wrapped instance.
 --]]
-function PluginInstance:ConvertProperty(PropertyName, PropertyValue)
+function PluginInstance:ConvertProperty(PropertyName: string, PropertyValue: any): any
     --Return the color if a PluginColor is used.
     if typeof(PropertyValue) == "table" and PropertyValue.IsA and PropertyValue:IsA("PluginColor") then
         return PropertyValue:GetColor()
@@ -175,4 +183,4 @@ end
 
 
 
-return PluginInstance
+return (PluginInstance :: any) :: PluginInstance

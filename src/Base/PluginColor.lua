@@ -3,10 +3,10 @@ TheNexusAvenger
 
 Helper class for managing plugin colors.
 --]]
+--!strict
 
-local NexusPluginComponents = require(script.Parent.Parent)
-
-local NexusObject = NexusPluginComponents:GetResource("NexusInstance.NexusObject")
+local NexusPluginComponents = script.Parent.Parent
+local NexusObject = require(NexusPluginComponents:WaitForChild("NexusInstance"):WaitForChild("NexusObject"))
 
 local PluginColor = NexusObject:Extend()
 PluginColor:SetClassName("PluginColor")
@@ -14,20 +14,27 @@ pcall(function()
     PluginColor.Settings = settings()
 end)
 
+export type PluginColor = {
+    new: (ColorEnum: string | Enum.StudioStyleGuideColor, ModiferEnum: string? | Enum.StudioStyleGuideModifier?) -> (PluginColor),
+    Extend: (self: PluginColor) -> (PluginColor),
+
+    GetColor: (self: PluginColor) -> (Color3),
+} & NexusObject.NexusObject
+
 
 
 --[[
 Creates the plugin color.
 --]]
-function PluginColor:__new(ColorEnum, ModiferEnum)
+function PluginColor:__new(ColorEnum: string | Enum.StudioStyleGuideColor, ModiferEnum: string? | Enum.StudioStyleGuideModifier?): ()
     NexusObject.__new(self)
 
     --Convert the enums.
     if typeof(ColorEnum) == "string" then
-        ColorEnum = Enum.StudioStyleGuideColor[ColorEnum]
+        ColorEnum = (Enum.StudioStyleGuideColor :: any)[ColorEnum]
     end
     if typeof(ModiferEnum) == "string" then
-        ModiferEnum = Enum.StudioStyleGuideModifier[ModiferEnum]
+        ModiferEnum = (Enum.StudioStyleGuideModifier :: any)[ModiferEnum]
     end
 
     --Store the color.
@@ -43,10 +50,10 @@ end
 --[[
 Returns the Color3 to use.
 --]]
-function PluginColor:GetColor()
+function PluginColor:GetColor(): Color3
     return self.Color3
 end
 
 
 
-return PluginColor
+return (PluginColor :: any) :: PluginColor
