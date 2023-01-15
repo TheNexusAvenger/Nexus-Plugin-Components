@@ -7,9 +7,6 @@
         },
         "NexusWrappedInstance": {
             "$path": "./module/Nexus-Wrapped-Instance/"
-        },
-        "NexusProject": {
-            "$path": "./module/Nexus-Project/"
         }
     }
 }
