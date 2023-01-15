@@ -18,7 +18,7 @@ SelectionList:SetClassName("SelectionList")
 Creates the Selection List.
 --]]
 function SelectionList:__new()
-    self:InitializeSuper()
+    NexusInstance.__new(self)
 
     self.Selected = false
     self.Selectable = true

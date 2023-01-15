@@ -16,9 +16,10 @@ Sets up the test.
 --]]
 function ElementListTest:Setup()
     --Create the entry class.
-    local TestClass = NexusPluginComponents:GetResource("Base.PluginInstance"):Extend()
+    local PluginInstance = NexusPluginComponents:GetResource("Base.PluginInstance")
+    local TestClass = PluginInstance:Extend()
     function TestClass:__new()
-        self:InitializeSuper("TextLabel")
+        PluginInstance.__new(self, "TextButton")
     end
     function TestClass:Update(Data)
         self.Text = tostring(Data)

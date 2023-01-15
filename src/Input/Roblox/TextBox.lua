@@ -17,7 +17,7 @@ TextBox:SetClassName("TextBox")
 Creates the TextBox.
 --]]
 function TextBox:__new()
-    self:InitializeSuper("TextBox")
+    PluginInstance.__new(self, "TextBox")
 
     --Add the Disabled property.
     self:DisableChangeReplication("Disabled")

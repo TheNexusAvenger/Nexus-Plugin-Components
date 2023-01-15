@@ -72,7 +72,7 @@ end)
 Creates the plugin instance.
 --]]
 function PluginInstance:__new(InstanceToWrap)
-    self:InitializeSuper(InstanceToWrap)
+    NexusWrappedInstance.__new(self, InstanceToWrap)
 
     --Set up the color property storage.
     self:DisableChangeReplication("WrappedClassName")
@@ -85,26 +85,24 @@ function PluginInstance:__new(InstanceToWrap)
     local ColorProperties = self.ColorProperties[WrappedClassName]
 
     --Connect colors being changed.
-    self:AddGenericPropertyValidator({
-        ValidateChange = function(_, _, Name, Value)
-            --Determine if the property is a Color3.
-            if ColorProperties[Name] == nil then
-                xpcall(function()
-                    --Store if the property is a Color3.
-                    ColorProperties[Name] = (typeof(WrappedInstance[Name]) == "Color3")
-                end, function()
-                    --Store false (failed to index).
-                    ColorProperties[Name] = false
-                end)
-            end
+    self:AddGenericPropertyValidator(function(Name, Value)
+        --Determine if the property is a Color3.
+        if ColorProperties[Name] == nil then
+            xpcall(function()
+                --Store if the property is a Color3.
+                ColorProperties[Name] = (typeof(WrappedInstance[Name]) == "Color3")
+            end, function()
+                --Store false (failed to index).
+                ColorProperties[Name] = false
+            end)
+        end
 
-            --Return the PluginColor or the original value.
-            if ColorProperties[Name] and typeof(Value) ~= "Color3" and (typeof(Value) == "string" or typeof(Value) == "EnumItem") then
-                return PluginColor.new(Value)
-            end
-            return Value
-        end,
-    })
+        --Return the PluginColor or the original value.
+        if ColorProperties[Name] and typeof(Value) ~= "Color3" and (typeof(Value) == "string" or typeof(Value) == "EnumItem") then
+            return PluginColor.new(Value)
+        end
+        return Value
+    end)
 
     --Connect updating the themes.
     self:DisableChangeReplication("Settings")
@@ -172,7 +170,7 @@ function PluginInstance:ConvertProperty(PropertyName, PropertyValue)
     end
 
     --Return the super result.
-    return self.super:ConvertProperty(PropertyName, PropertyValue)
+    return NexusWrappedInstance.ConvertProperty(self, PropertyName, PropertyValue)
 end
 
 

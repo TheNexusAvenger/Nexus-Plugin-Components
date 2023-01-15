@@ -17,7 +17,7 @@ ImageButton:SetClassName("ImageButton")
 Creates the ImageButton.
 --]]
 function ImageButton:__new()
-    self:InitializeSuper("ImageButton")
+    PluginInstance.__new(self, "ImageButton")
 
     --Add the Disabled property.
     self:DisableChangeReplication("Disabled")

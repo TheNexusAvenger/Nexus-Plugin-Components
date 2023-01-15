@@ -17,7 +17,7 @@ TextButton:SetClassName("TextButton")
 Creates the TextButton.
 --]]
 function TextButton:__new()
-    self:InitializeSuper("TextButton")
+    PluginInstance.__new(self, "TextButton")
 
     --Add the Disabled property.
     self:DisableChangeReplication("Disabled")

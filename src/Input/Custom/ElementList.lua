@@ -17,7 +17,7 @@ ElementList:SetClassName("ElementList")
 Creates the Element List.
 --]]
 function ElementList:__new(EntryClass)
-    self:InitializeSuper("Frame")
+    PluginInstance.__new(self, "Frame")
 
     --Set up the container.
     self.BackgroundTransparency = 1

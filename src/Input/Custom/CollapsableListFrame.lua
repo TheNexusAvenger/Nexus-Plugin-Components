@@ -26,7 +26,7 @@ CollapsableListFrame:SetClassName("CollapsableListFrame")
 Creates the collapsable list frame.
 --]]
 function CollapsableListFrame:__new()
-    self:InitializeSuper("Frame")
+    PluginInstance.__new(self, "Frame")
 
     --Craete the events.
     self:DisableChangeReplication("DoubleClicked")

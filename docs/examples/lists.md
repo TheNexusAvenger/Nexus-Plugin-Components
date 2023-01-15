@@ -15,8 +15,8 @@ local NexusPluginComponents = require(game.ReplicatedStorage:WaitForChild("Nexus
 --It doesn't have to extend PluginInstance, but it is simpler to use it.
 local EntryClass = NexusPluginComponents:GetResource("Base.PluginInstance"):Extend()
 
-function EntryClass:__new()
-    self:InitializeSuper("TextLabel") --Sets up the PluginInstance to create a TextLabel. Any contents can be used.
+function EntryClass.new()
+    EntryClass.__new(self, "TextLabel") --Sets up the PluginInstance to create a TextLabel. Any contents can be used.
 end
 
 function EntryClass:Update(Data)
@@ -53,10 +53,11 @@ as helpers.
 local NexusPluginComponents = require(game.ReplicatedStorage:WaitForChild("NexusPluginComponents"))
 
 --Create the entry class. CollapsableListFrame is recommended.
-local EntryClass = NexusPluginComponents:GetResource("Input.Custom.CollapsableListFrame"):Extend()
+local CollapsableListFrame = NexusPluginComponents:GetResource("Input.Custom.CollapsableListFrame")
+local EntryClass = CollapsableListFrame:Extend()
 
 function EntryClass:__new()
-    self:InitializeSuper()
+    EntryClass.__new(self)
 
     self:DisableChangeReplication("TextLabel") --Required so the added TextLabel property is not set in the wrapped instance of CollapsableListFrame.
     self.TextLabel = NexusPluginComponents.new("TextLabel")
@@ -65,7 +66,7 @@ function EntryClass:__new()
 end
 
 function EntryClass:Update(Data)
-    self.super:Update(Data) --Required for CollapsableListFrame to update the arrow and selection color.
+    CollapsableListFrame.Update(self, Data) --Required for CollapsableListFrame to update the arrow and selection color.
     self.TextLabel.Text = Data and Data.Text or ""
 end
 

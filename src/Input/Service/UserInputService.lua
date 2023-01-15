@@ -11,8 +11,9 @@ local INPUT_DELAY_TIME = 0.05
 
 local NexusPluginComponents = require(script.Parent.Parent.Parent)
 local NexusEvent = NexusPluginComponents:GetResource("NexusInstance.Event.NexusEvent")
+local NexusObject = NexusPluginComponents:GetResource("NexusInstance.NexusObject")
 
-local WrappedUserInputService = NexusPluginComponents:GetResource("NexusInstance.NexusObject"):Extend()
+local WrappedUserInputService = NexusObject:Extend()
 WrappedUserInputService:SetClassName("WrappedUserInputService")
 
 
@@ -21,7 +22,7 @@ WrappedUserInputService:SetClassName("WrappedUserInputService")
 Creates the User Input Service wrapper.
 --]]
 function WrappedUserInputService:__new()
-    self:InitializeSuper()
+    NexusObject.__new(self)
 
     --Set up the context events.
     self.ContextEvents = {}

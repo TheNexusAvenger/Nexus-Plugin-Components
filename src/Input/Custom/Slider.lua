@@ -30,7 +30,7 @@ end
 Creates the Slider.
 --]]
 function Slider:__new()
-    self:InitializeSuper("Frame")
+    PluginInstance.__new(self, "Frame")
     self.BackgroundTransparency = 1
 
     --Create the frames.

@@ -20,7 +20,7 @@ end)
 Creates the plugin color.
 --]]
 function PluginColor:__new(ColorEnum, ModiferEnum)
-    self:InitializeSuper()
+    NexusObject.__new(self)
 
     --Convert the enums.
     if typeof(ColorEnum) == "string" then

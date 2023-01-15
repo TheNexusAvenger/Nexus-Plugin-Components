@@ -25,7 +25,7 @@ Checkbox:SetClassName("Checkbox")
 Creates the Checkbox.
 --]]
 function Checkbox:__new()
-    self:InitializeSuper("TextButton")
+    PluginInstance.__new(self, "TextButton")
 
     --Set the defaults.
     self.BackgroundColor3 = Enum.StudioStyleGuideColor.CheckedFieldBackground
