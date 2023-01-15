@@ -153,7 +153,7 @@ function WrappedUserInputService:RemoveContext(Frame: Frame): ()
     local Events = self.ContextEvents[Frame]
     if not Events then return end
     self.ContextEvents[Frame] = nil
-    for _,Event in pairs(Events) do
+    for _, Event in Events do
         Event:Disconnect()
     end
     self.ContextEvents[Frame] = nil

@@ -116,7 +116,7 @@ function PluginInstance:__new(InstanceToWrap: Instance | string): ()
     self:DisableChangeReplication("Settings")
     if self.Settings then
         table.insert(self.EventsToDisconnect, self.Settings.Studio.ThemeChanged:Connect(function()
-            for PropertyName, IsColorProperty in pairs(ColorProperties) do
+            for PropertyName, IsColorProperty in ColorProperties do
                 if IsColorProperty then
                     local Color = self[PropertyName]
                     if typeof(Color) == "table" and Color.IsA and Color:IsA("PluginColor") then
@@ -129,7 +129,7 @@ function PluginInstance:__new(InstanceToWrap: Instance | string): ()
 
     --Set the defaults.
     if typeof(InstanceToWrap) == "string" and INSTANCE_CREATION_PRESETS[WrappedClassName] then
-        for Name, Value in pairs(INSTANCE_CREATION_PRESETS[WrappedClassName]) do
+        for Name, Value in INSTANCE_CREATION_PRESETS[WrappedClassName] do
             self[Name] = Value
         end
     end

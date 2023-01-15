@@ -163,7 +163,7 @@ function SelectionList:ToggleSelection(Entry: SelectionList): ()
         --Determine the indexes.
         local Entries = self:GetDescendants()
         local StartIndex, EndIndex = nil, nil
-        for i, OtherEntry in pairs(Entries) do
+        for i, OtherEntry in Entries do
             if Entry == OtherEntry then
                 StartIndex = i
             end
