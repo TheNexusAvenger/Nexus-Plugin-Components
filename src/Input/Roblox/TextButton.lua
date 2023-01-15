@@ -3,20 +3,27 @@ TheNexusAvenger
 
 TextButton class that can be disabled.
 --]]
+--!strict
 
-local NexusPluginComponents = require(script.Parent.Parent.Parent)
-
-local PluginInstance = NexusPluginComponents:GetResource("Base.PluginInstance")
+local NexusPluginComponents = script.Parent.Parent.Parent
+local PluginInstance = require(NexusPluginComponents:WaitForChild("Base"):WaitForChild("PluginInstance"))
 
 local TextButton = PluginInstance:Extend()
 TextButton:SetClassName("TextButton")
+
+export type PluginTextButton = {
+    new: () -> (PluginTextButton),
+    Extend: (self: PluginTextButton) -> (PluginTextButton),
+
+    Disabled: boolean,
+} & PluginInstance.PluginInstance & TextButton
 
 
 
 --[[
 Creates the TextButton.
 --]]
-function TextButton:__new()
+function TextButton:__new(): ()
     PluginInstance.__new(self, "TextButton")
 
     --Add the Disabled property.
@@ -31,4 +38,4 @@ end
 
 
 
-return TextButton
+return (TextButton :: any) :: PluginTextButton

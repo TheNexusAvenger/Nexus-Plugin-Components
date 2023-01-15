@@ -3,20 +3,27 @@ TheNexusAvenger
 
 ImageButton class that can be disabled.
 --]]
+--!strict
 
-local NexusPluginComponents = require(script.Parent.Parent.Parent)
-
-local PluginInstance = NexusPluginComponents:GetResource("Base.PluginInstance")
+local NexusPluginComponents = script.Parent.Parent.Parent
+local PluginInstance = require(NexusPluginComponents:WaitForChild("Base"):WaitForChild("PluginInstance"))
 
 local ImageButton = PluginInstance:Extend()
 ImageButton:SetClassName("ImageButton")
+
+export type PluginImageButton = {
+    new: () -> (PluginImageButton),
+    Extend: (self: PluginImageButton) -> (PluginImageButton),
+
+    Disabled: boolean,
+} & PluginInstance.PluginInstance & ImageButton
 
 
 
 --[[
 Creates the ImageButton.
 --]]
-function ImageButton:__new()
+function ImageButton:__new(): ()
     PluginInstance.__new(self, "ImageButton")
 
     --Add the Disabled property.
@@ -30,4 +37,4 @@ end
 
 
 
-return ImageButton
+return (ImageButton :: any) :: PluginImageButton

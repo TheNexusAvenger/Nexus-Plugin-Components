@@ -3,20 +3,27 @@ TheNexusAvenger
 
 TextBox class that can be disabled.
 --]]
+--!strict
 
-local NexusPluginComponents = require(script.Parent.Parent.Parent)
-
-local PluginInstance = NexusPluginComponents:GetResource("Base.PluginInstance")
+local NexusPluginComponents = script.Parent.Parent.Parent
+local PluginInstance = require(NexusPluginComponents:WaitForChild("Base"):WaitForChild("PluginInstance"))
 
 local TextBox = PluginInstance:Extend()
 TextBox:SetClassName("TextBox")
+
+export type PluginTextBox = {
+    new: () -> (PluginTextBox),
+    Extend: (self: PluginTextBox) -> (PluginTextBox),
+
+    Disabled: boolean,
+} & PluginInstance.PluginInstance & TextBox
 
 
 
 --[[
 Creates the TextBox.
 --]]
-function TextBox:__new()
+function TextBox:__new(): ()
     PluginInstance.__new(self, "TextBox")
 
     --Add the Disabled property.
@@ -37,4 +44,4 @@ end
 
 
 
-return TextBox
+return (TextBox :: any) :: PluginTextBox
