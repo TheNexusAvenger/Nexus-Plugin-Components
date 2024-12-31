@@ -17,7 +17,7 @@ return function()
                 ThemeChanged = MockThemeChanged.Event,
                 Theme = {
                     GetColor = function(_, Color: Enum.StudioStyleGuideColor, Modifier: Enum.StudioStyleGuideModifier?): Color3
-                        if Color == Enum.StudioStyleGuideColor.MainText then
+                        if Color == Enum.StudioStyleGuideColor.MainText or Color == Enum.StudioStyleGuideColor.ButtonText then
                             if not Modifier or Modifier == Enum.StudioStyleGuideModifier.Default then
                                 return Color3.fromRGB(255, MockOtherColor, MockOtherColor)
                             elseif Modifier == Enum.StudioStyleGuideModifier.Disabled then
@@ -90,6 +90,28 @@ return function()
             expect(TestInstance.BackgroundTransparency).to.equal(0.5)
             expect(TestInstance.TextColor3).to.equal(Color3.fromRGB(255, 255, 255))
             expect(TestInstance.Text).to.equal("Test")
+        end)
+
+        it("should create instances with enum-only colors.", function()
+            local TestInstance = TestScope:Create("TextLabel")({
+                TextColor3 = Enum.StudioStyleGuideColor.SubText,
+            }) :: TextLabel
+            expect(TestInstance.TextColor3).to.equal(Color3.fromRGB(0, 0, 255))
+        end)
+
+        it("should create instances with disabled colors.", function()
+            local Enabled = TestScope:Value(true)
+            local TestInstance = TestScope:Create("TextButton", Enabled)({
+                BackgroundColor3 = Enum.StudioStyleGuideColor.MainText,
+            }) :: TextButton
+            expect(TestInstance.BackgroundColor3).to.equal(Color3.fromRGB(255, 0, 0))
+            expect(TestInstance.TextColor3).to.equal(Color3.fromRGB(255, 0, 0))
+            expect(TestInstance.AutoButtonColor).to.equal(true)
+
+            Enabled:set(false)
+            expect(TestInstance.BackgroundColor3).to.equal(Color3.fromRGB(0, 255, 0))
+            expect(TestInstance.TextColor3).to.equal(Color3.fromRGB(0, 255, 0))
+            expect(TestInstance.AutoButtonColor).to.equal(false)
         end)
 
         it("should create property values.", function()

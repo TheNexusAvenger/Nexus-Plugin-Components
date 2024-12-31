@@ -10,14 +10,14 @@ local INSTANCE_PROPERTY_DEFAULTS = {
         TopImage = "rbxasset://textures/AvatarEditorImages/LightPixel.png",
     },
     ImageButton = {
-        AutoButtonColor = false,
+        AutoButtonColor = true,
     },
     TextLabel = {
         BackgroundTransparency = 1,
     },
     TextButton = {
         BorderSizePixel = 1,
-        AutoButtonColor = false,
+        AutoButtonColor = true,
     },
     TextBox = {
         BorderSizePixel = 1,
@@ -54,6 +54,10 @@ local INSTANCE_COLOR_DEFAULTS = {
         PlaceholderColor3 = Enum.StudioStyleGuideColor.DimmedText,
     },
 } :: {[string]: {[string]: Enum.StudioStyleGuideColor}}
+local AUTO_BUTTON_COLOR_CLASSES ={
+    "TextButton",
+    "ImageButton",
+} :: {string}
 
 local Fusion = require(script.Parent:WaitForChild("Fusion"))
 local FusionTypes = require(script.Parent:WaitForChild("Fusion"):WaitForChild("Types"))
@@ -79,9 +83,18 @@ return function(OverrideStudioSettings: Studio?): FusionScope
                 return (use(StudioTheme) :: StudioTheme):GetColor(use(Color), use(Modifier))
             end)
         end,
-        Create = function(Scope: FusionScope, ClassName: string): (FusionTypes.PropertyTable) -> (Instance)
+        Create = function(Scope: FusionScope, ClassName: string, Enabled: Fusion.Value<boolean>?): (FusionTypes.PropertyTable) -> (Instance)
             return function(Properties: FusionTypes.PropertyTable): Instance
+                --Add the AutoButtonColor value.
+                --This has to be done before the defaults since the defaults can set a value.
+                if Enabled and Properties["AutoButtonColor"] == nil and table.find(AUTO_BUTTON_COLOR_CLASSES, ClassName) then
+                    Properties["AutoButtonColor"] = Enabled
+                end
+
                 --Add the defaults.
+                local ColorModifier = Enabled and Scope:Computed(function(use)
+                    return use(Enabled) and Enum.StudioStyleGuideModifier.Default or Enum.StudioStyleGuideModifier.Disabled
+                end)
                 if INSTANCE_PROPERTY_DEFAULTS[ClassName] then
                     for PropertyName, PropertyValue in INSTANCE_PROPERTY_DEFAULTS[ClassName] do
                         if Properties[PropertyName] then continue end
@@ -91,8 +104,19 @@ return function(OverrideStudioSettings: Studio?): FusionScope
                 if INSTANCE_COLOR_DEFAULTS[ClassName] then
                     for PropertyName, PropertyColor in INSTANCE_COLOR_DEFAULTS[ClassName] do
                         if Properties[PropertyName] then continue end
-                        Properties[PropertyName] = Scope:PluginColor(PropertyColor)
+                        Properties[PropertyName] = Scope:PluginColor(PropertyColor, ColorModifier)
                     end
+                end
+
+                --Convert the colors if they are given as enum values.
+                local NewKeys = {}
+                for Key, Value in Properties do
+                    if typeof(Value) ~= "EnumItem" then continue end
+                    if Value.EnumType ~= Enum.StudioStyleGuideColor then continue end
+                    NewKeys[Key] = Scope:PluginColor(Value :: Enum.StudioStyleGuideColor, ColorModifier)
+                end
+                for Key, Value in NewKeys do
+                    (Properties :: any)[Key] = Value
                 end
 
                 --Create and return the instance.
