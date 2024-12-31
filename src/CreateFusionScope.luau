@@ -57,6 +57,7 @@ local FusionTypes = require(script.Parent:WaitForChild("Fusion"):WaitForChild("T
 export type FusionScope = FusionTypes.Fusion & {
     PluginColor: (Scope: FusionScope, Color: Fusion.UsedAs<Enum.StudioStyleGuideColor>, Modifier: Fusion.UsedAs<Enum.StudioStyleGuideModifier>?) -> (Fusion.UsedAs<Color3>),
     Create: (Scope: FusionScope, ClassName: string) -> (FusionTypes.PropertyTable) -> (Instance),
+    ValueFromProperty: <T>(Scope: FusionScope, Ins: Fusion.UsedAs<any?>, PropertyName: string) -> (Fusion.Value<T?>),
 }
 
 return function(OverrideStudioSettings: Studio?): FusionScope
@@ -93,6 +94,29 @@ return function(OverrideStudioSettings: Studio?): FusionScope
                 --Create and return the instance.
                 return Fusion.New(Scope, ClassName)(Properties)
             end
+        end,
+        ValueFromProperty = function<T>(Scope: FusionScope, Ins: Fusion.UsedAs<any?>, PropertyName: string): Fusion.Value<T?>
+            local PropertyValue = Scope:Value(nil :: T?)
+            local InstanceChangedEventConnections: {RBXScriptConnection} = {}
+            Scope:Observer(Ins):onBind(function()
+                --Clear the existing events.
+                for _, EventConnection in InstanceChangedEventConnections do
+                    EventConnection:Disconnect()
+                end
+                InstanceChangedEventConnections = {}
+
+                --Connect the properties.
+                local CurrentInstance = Fusion.peek(Ins)
+                if not CurrentInstance then
+                    PropertyValue:set(nil)
+                    return
+                end
+                PropertyValue:set(CurrentInstance[PropertyName])
+                table.insert(InstanceChangedEventConnections, CurrentInstance:GetPropertyChangedSignal(PropertyName):Connect(function()
+                    PropertyValue:set(CurrentInstance[PropertyName])
+                end))
+            end)
+            return PropertyValue
         end,
     }) :: FusionScope
 end
