@@ -1,0 +1,31 @@
+--Tests CreateCheckbox.
+--!strict
+
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+local CreateCheckbox = require(ReplicatedStorage.NexusPluginComponents.Input.CreateCheckbox)
+local CreateFusionScope = require(ReplicatedStorage.NexusPluginComponents.CreateFusionScope)
+local Fusion = require(ReplicatedStorage.NexusPluginComponents.Fusion)
+
+return function()
+    describe("A checkbox", function()
+        local TestScope, TestValue, TestCheckbox = nil, nil, nil
+        beforeEach(function()
+            TestScope = CreateFusionScope()
+            TestValue = TestScope:Value("Checked" :: CreateCheckbox.CheckboxState)
+            TestCheckbox = CreateCheckbox(TestScope, TestValue :: any)
+        end)
+
+        afterEach(function()
+            TestScope:doCleanup()
+        end)
+        
+        it("should show correct values.", function()
+            expect(TestCheckbox.Text).to.equal("✓")
+            TestValue:set("Mixed")
+            expect(TestCheckbox.Text).to.equal("◼")
+            TestValue:set("Unchecked")
+            expect(TestCheckbox.Text).to.equal("")
+        end)
+    end)
+end
