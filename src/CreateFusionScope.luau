@@ -64,7 +64,7 @@ local FusionTypes = require(script.Parent:WaitForChild("Fusion"):WaitForChild("T
 
 export type FusionScope = FusionTypes.Fusion & {
     PluginColor: (Scope: FusionScope, Color: Fusion.UsedAs<Enum.StudioStyleGuideColor>, Modifier: Fusion.UsedAs<Enum.StudioStyleGuideModifier>?) -> (Fusion.UsedAs<Color3>),
-    Create: (Scope: FusionScope, ClassName: string) -> (FusionTypes.PropertyTable) -> (Instance),
+    Create: (Scope: FusionScope, ClassName: string, Enabled: Fusion.UsedAs<boolean>?) -> (FusionTypes.PropertyTable) -> (Instance),
     ValueFromProperty: <T>(Scope: FusionScope, Ins: Fusion.UsedAs<any?>, PropertyName: string) -> (Fusion.Value<T?>),
 }
 
@@ -83,7 +83,7 @@ return function(OverrideStudioSettings: Studio?): FusionScope
                 return (use(StudioTheme) :: StudioTheme):GetColor(use(Color), use(Modifier))
             end)
         end,
-        Create = function(Scope: FusionScope, ClassName: string, Enabled: Fusion.Value<boolean>?): (FusionTypes.PropertyTable) -> (Instance)
+        Create = function(Scope: FusionScope, ClassName: string, Enabled: Fusion.UsedAs<boolean>?): (FusionTypes.PropertyTable) -> (Instance)
             return function(Properties: FusionTypes.PropertyTable): Instance
                 --Add the AutoButtonColor value.
                 --This has to be done before the defaults since the defaults can set a value.
@@ -92,9 +92,12 @@ return function(OverrideStudioSettings: Studio?): FusionScope
                 end
 
                 --Add the defaults.
-                local ColorModifier = Enabled and Scope:Computed(function(use)
-                    return use(Enabled) and Enum.StudioStyleGuideModifier.Default or Enum.StudioStyleGuideModifier.Disabled
-                end)
+                local ColorModifier = nil
+                if Enabled then
+                    ColorModifier = Scope:Computed(function(use)
+                        return use(Enabled) and Enum.StudioStyleGuideModifier.Default or Enum.StudioStyleGuideModifier.Disabled
+                    end)
+                end
                 if INSTANCE_PROPERTY_DEFAULTS[ClassName] then
                     for PropertyName, PropertyValue in INSTANCE_PROPERTY_DEFAULTS[ClassName] do
                         if Properties[PropertyName] then continue end
