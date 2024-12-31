@@ -2,6 +2,9 @@
     "name": "Nexus-Plugin-Components",
     "tree": {
         "$path": "./src",
+        "Fusion": {
+            "$path": "./module/Fusion/"
+        },
         "NexusInstance": {
             "$path": "./module/Nexus-Instance/"
         },

@@ -6,8 +6,11 @@
             "$className": "ReplicatedStorage",
             "NexusPluginComponents": {
                 "$path": "."
-            },
-            "NexusPluginComponents.nexusspec": {
+            }
+        },
+        "TestService": {
+            "$className": "TestService",
+            "NexusPluginComponentsTests": {
                 "$path": "./test"
             }
         }
