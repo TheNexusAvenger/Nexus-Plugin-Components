@@ -34,8 +34,8 @@ return function()
             local Slider = TestScope:Hydrate(CreateSlider(TestScope, SliderValue))({
                 Size = UDim2.new(1, 0, 1, 0),
                 Parent = TestParent,
-            })
-            local SliderButton = Slider:FindFirstChildOfClass("TextButton")
+            }) :: Frame
+            local SliderButton = Slider:FindFirstChildOfClass("TextButton") :: TextButton
             local _ = Slider.AbsoluteSize
             task.wait()
 
@@ -52,8 +52,8 @@ return function()
             }))({
                 Size = UDim2.new(1, 0, 1, 0),
                 Parent = TestParent,
-            })
-            local SliderButton = Slider:FindFirstChildOfClass("TextButton")
+            }) :: Frame
+            local SliderButton = Slider:FindFirstChildOfClass("TextButton") :: TextButton
             local _ = Slider.AbsoluteSize
             task.wait()
 
@@ -67,8 +67,8 @@ return function()
             local Slider = TestScope:Hydrate(CreateSlider(TestScope, SliderValue))({
                 Size = UDim2.new(1, 0, 1, 0),
                 Parent = TestParent,
-            })
-            local SliderButton = Slider:FindFirstChildOfClass("TextButton")
+            }) :: Frame
+            local SliderButton = Slider:FindFirstChildOfClass("TextButton") :: TextButton
             local _ = Slider.AbsoluteSize
             task.wait()
 
