@@ -9,11 +9,15 @@ local INSTANCE_PROPERTY_DEFAULTS = {
         MidImage = "rbxasset://textures/AvatarEditorImages/LightPixel.png",
         TopImage = "rbxasset://textures/AvatarEditorImages/LightPixel.png",
     },
+    ImageButton = {
+        AutoButtonColor = false,
+    },
     TextLabel = {
         BackgroundTransparency = 1,
     },
     TextButton = {
         BorderSizePixel = 1,
+        AutoButtonColor = false,
     },
     TextBox = {
         BorderSizePixel = 1,
