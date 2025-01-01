@@ -22,6 +22,7 @@ export type SelectionListEntry<T> = {
     VisibleEntries: Fusion.UsedAs<{SelectionListEntry<T>}>,
     Descendants: Fusion.UsedAs<{SelectionListEntry<T>}>,
     LastSelection: SelectionListEntry<T>?,
+    SortChildrenFunction: ((SelectionListEntry<T>, SelectionListEntry<T>) -> (boolean))?,
 } & typeof(setmetatable({}, SelectionListEntry))
 
 
@@ -29,7 +30,7 @@ export type SelectionListEntry<T> = {
 --[[
 Creates a selection list entry with initial data.
 --]]
-function SelectionListEntry.new<T>(ParentScope: CreateFusionScope.FusionScope, InitialData: T): SelectionListEntry<T>
+function SelectionListEntry.new<T>(ParentScope: CreateFusionScope.FusionScope, InitialData: T, SortChildrenFunction: ((SelectionListEntry<T>, SelectionListEntry<T>) -> (boolean))?): SelectionListEntry<T>
     --Create the values.
     local Scope = ParentScope:innerScope() :: CreateFusionScope.FusionScope
     local Data = ParentScope:Value(InitialData)
@@ -69,6 +70,7 @@ function SelectionListEntry.new<T>(ParentScope: CreateFusionScope.FusionScope, I
         Selectable = Selectable,
         Parent = Parent,
         Children = Children,
+        SortChildrenFunction = SortChildrenFunction,
     }, SelectionListEntry) :: SelectionListEntry<T>
     self.VisibleEntries = Scope:Computed(function(use)
         if not use(Visible) then return {} end
@@ -119,6 +121,9 @@ function SelectionListEntry.AddChild<T>(self: SelectionListEntry<T>, Child: Sele
         ChildParent:RemoveChild(Child)
     end
     table.insert(CurrentChildren, Child)
+    if self.SortChildrenFunction then
+        table.sort(CurrentChildren, self.SortChildrenFunction)
+    end
     self.Children:set(CurrentChildren)
     Child.Parent:set(self)
     Child.Level:set(Fusion.peek(self.Level) + 1)
