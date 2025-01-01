@@ -98,13 +98,10 @@ function SelectionListEntryFrame.new<T>(ParentScope: CreateFusionScope.FusionSco
                     --Handle the click and double-click.
                     if not LastClickTime or (tick() - LastClickTime) > DOUBLE_CLICK_MAX_SECONDS then
                         LastClickTime = tick()
-                        DoubleClickEvent:Fire()
+                        Fusion.peek(Entry):ToggleSelection(Input:IsModifierKeyDown(Enum.ModifierKey.Ctrl), Input:IsModifierKeyDown(Enum.ModifierKey.Shift))
                     else
                         LastClickTime = nil
-                        local CurrentEntry = Fusion.peek(Entry)
-                        if Fusion.peek(CurrentEntry.Selectable) then
-                            --TODO: Toggle selection.
-                        end
+                        DoubleClickEvent:Fire()
                     end
                 end,
                 [Children] = CreateContents(Scope, Entry, DoubleClickEvent.Event),

@@ -19,6 +19,8 @@ export type SelectionListEntry<T> = {
     Parent: Fusion.Value<SelectionListEntry<T>?>,
     Children: Fusion.Value<{SelectionListEntry<T>}>,
     VisibleEntries: Fusion.UsedAs<{SelectionListEntry<T>}>,
+    Descendants: Fusion.UsedAs<{SelectionListEntry<T>}>,
+    LastSelection: SelectionListEntry<T>?,
 } & typeof(setmetatable({}, SelectionListEntry))
 
 
@@ -77,6 +79,16 @@ function SelectionListEntry.new<T>(ParentScope: CreateFusionScope.FusionScope, I
         end
         return Entries
     end)
+    self.Descendants = Scope:Computed(function(use)
+        local Entries = {self}
+        for _, Child in use(Children) :: {SelectionListEntry<T>} do
+            local ChildDescendants = use(Child.Descendants)
+            for _, Entry in ChildDescendants do
+                table.insert(Entries, Entry)
+            end
+        end
+        return Entries
+    end)
 
     --Create and return the object.
     return self
@@ -125,6 +137,50 @@ function SelectionListEntry.RemoveChild<T>(self: SelectionListEntry<T>, Child: S
 end
 
 --[[
+Toggles the selection of the entry.
+--]]
+function SelectionListEntry.ToggleSelection<T>(self: SelectionListEntry<T>, ControlDown: boolean?, ShiftDown: boolean?): ()
+    if not Fusion.peek(self.Selectable) then return end
+
+    --Get the root selection entry.
+    local RootListEntry = self
+    while true do
+        local NewRootListEntry = Fusion.peek(RootListEntry.Parent)
+        if not NewRootListEntry then break end
+        RootListEntry = NewRootListEntry
+    end
+
+    --Add the visible entries inbetween if shift is down.
+    if ShiftDown and RootListEntry.LastSelection then
+        --Determine the indices to select.
+        local VisibleEntries = Fusion.peek(RootListEntry.VisibleEntries)
+        local LastIndex, CurrentIndex = table.find(VisibleEntries, RootListEntry.LastSelection), table.find(VisibleEntries, self)
+        if not LastIndex or not CurrentIndex then return end
+        if LastIndex > CurrentIndex then
+            LastIndex, CurrentIndex = CurrentIndex, LastIndex
+        end
+
+        --Select the frames in-between.
+        --This logic is 100% correct. Ideally, shift-presses should unselect if done again.
+        for i = LastIndex, CurrentIndex do
+            local CurrentEntry = VisibleEntries[i]
+            if not Fusion.peek(CurrentEntry.Selectable) then continue end
+            CurrentEntry.Selected:set(true)
+        end
+    elseif ControlDown then
+        --Add the frame to the selection if control is down.
+        self.Selected:set(true)
+        RootListEntry.LastSelection = self
+    else
+        --Unselect all other frames and set the selection of this frame.
+        for _, Entry in Fusion.peek(RootListEntry.Descendants) do
+            Entry.Selected:set(Entry == self)
+        end
+        RootListEntry.LastSelection = self
+    end
+end
+
+--[[
 Destroys the selection list entry.
 --]]
 function SelectionListEntry.Destroy<T>(self: SelectionListEntry<T>): ()
@@ -144,6 +200,7 @@ function SelectionListEntry.Destroy<T>(self: SelectionListEntry<T>): ()
     if self.Destroyed then return end
     self.Destroyed = true
     self.Scope:doCleanup()
+    self.LastSelection = nil
 end
 
 

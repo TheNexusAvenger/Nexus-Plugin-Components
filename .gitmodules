@@ -1,6 +1,3 @@
-[submodule "module/Nexus-Instance"]
-	path = module/Nexus-Instance
-	url = https://github.com/TheNexusAvenger/Nexus-Instance.git
 [submodule "module/Fusion"]
 	path = module/Fusion
 	url = https://github.com/dphfox/Fusion.git
