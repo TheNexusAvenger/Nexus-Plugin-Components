@@ -8,6 +8,9 @@
         "NexusInstance": {
             "$path": "./module/Nexus-Instance/"
         },
+        "NexusVirtualList": {
+            "$path": "./module/Nexus-Virtual-List/"
+        },
         "NexusWrappedInstance": {
             "$path": "./module/Nexus-Wrapped-Instance/"
         }

@@ -7,3 +7,6 @@
 [submodule "module/Fusion"]
 	path = module/Fusion
 	url = https://github.com/dphfox/Fusion.git
+[submodule "module/Nexus-Virtual-List"]
+	path = module/Nexus-Virtual-List
+	url = https://github.com/TheNexusAvenger/Nexus-Virtual-List.git

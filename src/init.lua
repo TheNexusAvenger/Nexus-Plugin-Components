@@ -8,8 +8,6 @@ Main project for using Nexus Plugin Components.
 local NexusEvent = require(script:WaitForChild("NexusInstance"):WaitForChild("Event"):WaitForChild("NexusEvent"))
 local PluginColor = require(script:WaitForChild("Base"):WaitForChild("PluginColor"))
 local PluginInstance = require(script:WaitForChild("Base"):WaitForChild("PluginInstance"))
-local CollapsableListFrame = require(script:WaitForChild("Input"):WaitForChild("Custom"):WaitForChild("CollapsableListFrame"))
-local ElementList = require(script:WaitForChild("Input"):WaitForChild("Custom"):WaitForChild("ElementList"))
 local SelectionList = require(script:WaitForChild("State"):WaitForChild("SelectionList"))
 
 local NexusPluginComponents = {}
@@ -19,18 +17,12 @@ NexusPluginComponents.ClassNameToPath = {
 
     --Helper.
     PluginColor = PluginColor,
-    ElementList = ElementList,
     SelectionList = SelectionList,
-
-    --Custom.
-    CollapsableListFrame = CollapsableListFrame,
 }
 
 export type Event<T...> = NexusEvent.NexusEvent<T...>
 export type PluginColor = PluginColor.PluginColor
 export type PluginInstance = PluginInstance.PluginInstance
-export type CollapsableListFrame = CollapsableListFrame.CollapsableListFrame
-export type ElementList = ElementList.ElementList
 export type SelectionList = SelectionList.SelectionList
 
 

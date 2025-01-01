@@ -1,101 +1,93 @@
 # Lists
-Lists are more complicated to handle compared to Nexus Plugin Framework
-in order to mitigate [performance issues with bigger inputs](https://twitter.com/TheNexusAvenger/status/1497663514906869772).
-Compared to Nexus Plugin Framework, there are 4 components to consider:
-- `ScrollingFrame` - Existing Roblox instance type for scrolling through lists.
-- `ElementList` - Renders the visible elements of the list.
-- List Element - Class that displays an entry of the list. Should extend `PluginInstance` or `CollapsableListFrame`.
-- (Optional) `SelectionList` - Manages the state of expanded/collapsed lists with selections. The list element class should extend `CollapsableListFrame`, but is not required.
+Lists use a combination of [Fusion](https://elttob.uk/Fusion/) for managinge values
+and [Nexus Virtual List](https://github.com/TheNexusAvenger/Nexus-Virtual-List) for
+efficently displaying them.
 
-## Simple Lists
-```lua
-local NexusPluginComponents = require(game.ReplicatedStorage:WaitForChild("NexusPluginComponents"))
+## List Entries
+In order to display the list, the contents of the list must be created using
+`SelectionListEntry`. It is strongly recommended that the type of data stored
+is consistent between **all** entries, since the frames in the list can display
+any entry and be changed to display any other frame.
 
---Create the entry class.
---It doesn't have to extend PluginInstance, but it is simpler to use it.
-local EntryClass = NexusPluginComponents:GetResource("Base.PluginInstance"):Extend()
+A root `SelectionListEntry` is required for statement management, but won't be
+presented.
 
-function EntryClass.new()
-    EntryClass.__new(self, "TextLabel") --Sets up the PluginInstance to create a TextLabel. Any contents can be used.
-end
+```luau
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local CreateFusionScope = require(ReplicatedStorage:WaitForChild("NexusPluginComponents"):WaitForChild("CreateFusionScope"))
+local SelectionListEntry = require(ReplicatedStorage:WaitForChild("NexusPluginComponents"):WaitForChild("List"):WaitForChild("SelectionListEntry"))
 
-function EntryClass:Update(Data)
-    --Data will be nil if there is nothing to show or the entry to show.
-    --For this example, strings are used, but they can be anything desired.
-    self.Text = Data or ""
-end
+export type EntryData = { --Can be any data, including non-tables.
+    Text: string,
+    Color: Color3,
+}
 
---Create the scrolling frame.
-local ScreenGui = NexusPluginComponents.new("ScreenGui")
-ScreenGui.Parent = game.Players.LocalPlayer and game.Players.LocalPlayer:FindFirstChild("PlayerGui") or game.StarterGui
+local Root = SelectionListEntry.new(Scope, {Text = "", Color = Color.fromRGB(0, 0, 0)}) --This root entry will not be displayed.
+local Child1 = SelectionListEntry.new(Scope, {Text = "Entry1", Color = Color.fromRGB(0, 255, 0)})
+local Child2 = SelectionListEntry.new(Scope, {Text = "Entry2", Color = Color.fromRGB(0, 0, 255)})
+local Child3 = SelectionListEntry.new(Scope, {Text = "Entry3", Color = Color.fromRGB(0, 255, 0)})
+local Child4 = SelectionListEntry.new(Scope, {Text = "Entry4", Color = Color.fromRGB(0, 0, 255)})
 
-local ScrollingFrame = NexusPluginComponents.new("ScrollingFrame")
-ScrollingFrame.Size = UDim2.new(0, 200, 0, 200)
-ScrollingFrame.Parent = ScreenGui
+--AddChild will create the list. Any entry can contain multiple sub-entries.
+--RemoveChild can be called to remove child entries. Destroy will also clear them.
+Root:AddChild(Child1)
+Child1:AddChild(Child2)
+Root:AddChild(Child3)
+Child3:AddChild(Child4)
 
---Create the element list.
-local ElementList = NexusPluginComponents.new("ElementList", EntryClass) --The second parameter must be the class to use, or a function that creates the class.
-ElementList.EntryHeight = 17 --Makes each row 17 pixels tall.
-ElementList:ConnectScrollingFrame(ScrollingFrame) --Binds the ElementList to the ScrollingFrame.
-
---Show the demo entries.
-local Entries = {}
-for i = 1, 100 do
-    table.insert(Entries, "Test "..tostring(i))
-end
-ElementList:SetEntries(Entries)
+--Optional setup.
+Child1.Expandable:set(false) --Hides the expand button for the row.
+Child1.Expanded:set(false) --Collapses the row.
+Child1.Selectable:set(false) --Prevents the row from being selected.
 ```
 
-## Nested Lists
-For nested lists, it is recommended to use `SelectionList` and `CollapsableListFrame`
-as helpers.
-```lua
-local NexusPluginComponents = require(game.ReplicatedStorage:WaitForChild("NexusPluginComponents"))
+## List
+With the entries created, a `ScrollingFrame` needs to be creatted and used with
+`CreateExpandableList`.
 
---Create the entry class. CollapsableListFrame is recommended.
-local CollapsableListFrame = NexusPluginComponents:GetResource("Input.Custom.CollapsableListFrame")
-local EntryClass = CollapsableListFrame:Extend()
+```luau
+... --Previous section.
 
-function EntryClass:__new()
-    EntryClass.__new(self)
+local CreateExpandableList = require(ReplicatedStorage:WaitForChild("NexusPluginComponents"):WaitForChild("List"):WaitForChild("CreateExpandableList"))
 
-    self:DisableChangeReplication("TextLabel") --Required so the added TextLabel property is not set in the wrapped instance of CollapsableListFrame.
-    self.TextLabel = NexusPluginComponents.new("TextLabel")
-    self.TextLabel.Size = UDim2.new(1, 0, 1, 0)
-    self.TextLabel.Parent = self.AdornFrame
-end
+--Create the ScrollingFrame.
+--Note: Create will add defaults for plugins, New (from Fusion) will not.
+local ScrollingFrame = Scope:Create("ScrollingFrame")({
+    Size = UDim2.new(0, 400, 0, 600),
+    Parent = ...,
+    --CanvasSize is handled by NexusVirtualList. It does not need to be set here.
+}) :: ScrollingFrame
 
-function EntryClass:Update(Data)
-    CollapsableListFrame.Update(self, Data) --Required for CollapsableListFrame to update the arrow and selection color.
-    self.TextLabel.Text = Data and Data.Text or ""
-end
+--Create the list. It has 4 parameters:
+--1. Scope - The Fusion scope used to create instances.
+--2. ScrollingFrame - The ScrollingFrame instance to control.
+--3. RootEntry - The root SelectionListEntry to show.
+--4. ContentsConstructor - Creates the display for the frame. This provides:
+--   a. The scope for creating frames
+--   b. Fusion value for the contents to display (will change while scrolling)
+--   c. An Event for the row being double-clicked
+local VirtualList = CreateExpandableList(Scope, ScrollingFrame, Root, function(Scope: CreateFusionScope.FusionScope, Entry: SelectionListEntry.SelectionListEntry<EntryData>, DoubleClicked: RBXScriptSignal)
+    --Do something with the row when double clicked.
+    --This event is cleared when the row is destroyed, so the connection does not need to be stored.
+    DoubleClicked:Connect(function()
+        print(`{Fusion.peek(Fusion.peek(Entry).Data).Text} was double clicked!`)
+    end)
 
---Create the scrolling frame.
-local ScreenGui = NexusPluginComponents.new("ScreenGui")
-ScreenGui.Parent = game.Players.LocalPlayer and game.Players.LocalPlayer:FindFirstChild("PlayerGui") or game.StarterGui
-
-local ScrollingFrame = NexusPluginComponents.new("ScrollingFrame")
-ScrollingFrame.Size = UDim2.new(0, 200, 0, 200)
-ScrollingFrame.Parent = ScreenGui
-
---Create the element list.
-local SelectionList = NexusPluginComponents.new("SelectionList")
-local ElementList = NexusPluginComponents.new("ElementList", function()
-    local Entry = EntryClass.new()
-    Entry.SelectionList = SelectionList --Setting this helps set up automatic handling of expanding/collapsing entries and selections.
-    return Entry
+    --Create the display text.
+    --Can be any set of instances.
+    return {
+        Scope:Create("TextLabel")({
+            Size = UDim2.new(1, 0, 1, 0),
+            Text = Scope:Computed(function(use)
+                return use(use(Entry).Data).Text
+            end),
+            TextTextColor3 = Scope:Computed(function(use)
+                return use(use(Entry).Data).Color
+            end),
+            TextXAlignment = Enum.TextXAlignment.Left,
+        })
+    }
 end)
-ElementList.EntryHeight = 17 --Makes each row 17 pixels tall.
-ElementList:ConnectScrollingFrame(ScrollingFrame) --Binds the ElementList to the ScrollingFrame.
 
---Show the demo entries.
-for i = 1, 100 do
-    local Child = SelectionList:CreateChild()
-    Child.Text = "Test "..tostring(i)
-    for j = 1, 10 do
-        local SubChild = Child:CreateChild()
-        SubChild.Text = "Sub Test "..tostring(j)
-    end
-end
-ElementList:SetEntries(SelectionList:GetDescendants()) --When changing an entry (such as running CreateChild or editting a property), this must be re-ran to apply the changes. It will not automatically listen for changes.
+--Optionally, call VirtualList::SetScrollWidth or VirtualList::SetEntryHeight. See Nexus Virutal List for more.
 ```
