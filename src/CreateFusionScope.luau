@@ -14,7 +14,7 @@ local INSTANCE_PROPERTY_DEFAULTS = {
     },
     TextLabel = {
         BackgroundTransparency = 1,
-        TextXAlginment = Enum.TextXAlignment.Left,
+        TextXAlignment = Enum.TextXAlignment.Left,
     },
     TextButton = {
         BorderSizePixel = 1,
