@@ -39,6 +39,7 @@ Child3:AddChild(Child4)
 Child1.Expandable:set(false) --Hides the expand button for the row.
 Child1.Expanded:set(false) --Collapses the row.
 Child1.Selectable:set(false) --Prevents the row from being selected.
+Child1.Visible:set(false) --Prevents the row and children from being shown.
 ```
 
 ## List

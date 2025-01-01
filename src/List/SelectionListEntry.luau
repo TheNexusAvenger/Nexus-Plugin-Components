@@ -12,6 +12,7 @@ export type SelectionListEntry<T> = {
     Scope: CreateFusionScope.FusionScope,
     Data: Fusion.Value<T>,
     Level: Fusion.Value<number>,
+    Visible: Fusion.Value<boolean>,
     Expanded: Fusion.Value<boolean>,
     Expandable: Fusion.Value<boolean>,
     Selected: Fusion.Value<boolean>,
@@ -33,6 +34,7 @@ function SelectionListEntry.new<T>(ParentScope: CreateFusionScope.FusionScope, I
     local Scope = ParentScope:innerScope() :: CreateFusionScope.FusionScope
     local Data = ParentScope:Value(InitialData)
     local Level = ParentScope:Value(0)
+    local Visible = ParentScope:Value(true)
     local Expanded = ParentScope:Value(true)
     local Expandable = ParentScope:Value(true)
     local Selected = ParentScope:Value(false)
@@ -60,6 +62,7 @@ function SelectionListEntry.new<T>(ParentScope: CreateFusionScope.FusionScope, I
         Scope = Scope,
         Data = Data,
         Level = Level,
+        Visible = Visible,
         Expanded = Expanded,
         Expandable = Expandable,
         Selected = Selected,
@@ -68,6 +71,7 @@ function SelectionListEntry.new<T>(ParentScope: CreateFusionScope.FusionScope, I
         Children = Children,
     }, SelectionListEntry) :: SelectionListEntry<T>
     self.VisibleEntries = Scope:Computed(function(use)
+        if not use(Visible) then return {} end
         local Entries = {self}
         if use(Expanded) then
             for _, Child in use(Children) :: {SelectionListEntry<T>} do
