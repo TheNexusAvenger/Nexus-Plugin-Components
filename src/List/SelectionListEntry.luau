@@ -150,7 +150,7 @@ Sorts the child entries.
 This is only needed if child data is updated. New child elements will be sorted.
 No action is taken if no sort function is in use.
 --]]
-function SelectionListEntry.SortChildren<T>(self: SelectionListEntry<T>, Child: SelectionListEntry<T>): ()
+function SelectionListEntry.SortChildren<T>(self: SelectionListEntry<T>): ()
     if not self.SortChildrenFunction then return end
     local CurrentChildren = Fusion.peek(self.Children)
     table.sort(CurrentChildren, self.SortChildrenFunction)
