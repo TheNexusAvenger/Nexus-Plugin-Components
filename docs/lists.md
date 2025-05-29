@@ -14,8 +14,10 @@ presented.
 
 ```luau
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local CreateFusionScope = require(ReplicatedStorage:WaitForChild("NexusPluginComponents"):WaitForChild("CreateFusionScope"))
-local SelectionListEntry = require(ReplicatedStorage:WaitForChild("NexusPluginComponents"):WaitForChild("List"):WaitForChild("SelectionListEntry"))
+local NexusPluginComponents = require(ReplicatedStorage:WaitForChild("NexusPluginComponents"))
+
+local CreateFusionScope = NexusPluginComponents.CreateFusionScope
+local SelectionListEntry = NexusPluginComponents.List.SelectionListEntry
 
 export type EntryData = { --Can be any data, including non-tables.
     Text: string,
@@ -49,7 +51,7 @@ With the entries created, a `ScrollingFrame` needs to be creatted and used with
 ```luau
 ... --Previous section.
 
-local CreateExpandableList = require(ReplicatedStorage:WaitForChild("NexusPluginComponents"):WaitForChild("List"):WaitForChild("CreateExpandableList"))
+local CreateExpandableList = NexusPluginComponents.List.CreateExpandableList
 
 --Create the ScrollingFrame.
 --Note: Create will add defaults for plugins, New (from Fusion) will not.

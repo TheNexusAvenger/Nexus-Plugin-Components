@@ -8,7 +8,9 @@ implementation.
 
 ```luau
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local CreateFusionScope = require(ReplicatedStorage:WaitForChild("NexusPluginComponents"):WaitForChild("CreateFusionScope"))
+local NexusPluginComponents = require(ReplicatedStorage:WaitForChild("NexusPluginComponents"))
+
+local CreateFusionScope = NexusPluginComponents.CreateFusionScope
 ```
 
 The scope provides the following additions to the default scope:
@@ -27,7 +29,9 @@ used as normal.
 
 ```luau
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local CreateFusionScope = require(ReplicatedStorage:WaitForChild("NexusPluginComponents"):WaitForChild("CreateFusionScope"))
+local NexusPluginComponents = require(ReplicatedStorage:WaitForChild("NexusPluginComponents"))
+
+local CreateFusionScope = NexusPluginComponents.CreateFusionScope
 
 local Scope = CreateFusionScope()
 local TestTextLabel = Scope:Create("TextLabel")({
@@ -45,7 +49,9 @@ the theme changing.
 
 ```luau
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local CreateFusionScope = require(ReplicatedStorage:WaitForChild("NexusPluginComponents"):WaitForChild("CreateFusionScope"))
+local NexusPluginComponents = require(ReplicatedStorage:WaitForChild("NexusPluginComponents"))
+
+local CreateFusionScope = NexusPluginComponents.CreateFusionScope
 
 local Scope = CreateFusionScope()
 local Color = Scope:Value(Enum.StudioStyleGuideColor.MainText)
@@ -65,7 +71,9 @@ for this use case.**
 
 ```luau
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local CreateFusionScope = require(ReplicatedStorage:WaitForChild("NexusPluginComponents"):WaitForChild("CreateFusionScope"))
+local NexusPluginComponents = require(ReplicatedStorage:WaitForChild("NexusPluginComponents"))
+
+local CreateFusionScope = NexusPluginComponents.CreateFusionScope
 
 local Scope = CreateFusionScope()
 local TestTextLabel = Scope:Create("TextLabel")({
@@ -83,11 +91,13 @@ stop inputs, but it will modify colors and change `AutoButtonColor`
 
 ```luau
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local CreateFusionScope = require(ReplicatedStorage:WaitForChild("NexusPluginComponents"):WaitForChild("CreateFusionScope"))
+local NexusPluginComponents = require(ReplicatedStorage:WaitForChild("NexusPluginComponents"))
+
+local CreateFusionScope = NexusPluginComponents.CreateFusionScope
 
 local Scope = CreateFusionScope()
 local Enabled = Scope:Value(true) --Can also use Scope:Computed(...)
-local TestTextButton = Scope:Create("TestTextButton", Enabled)({
+local TestTextButton = Scope:Create("TextButton", Enabled)({
     --No color/AutoButtonColor will be affected by Enabled.
     TextColor3 = Enum.StudioStyleGuideColor.MainText, --This will be affected by Enabled.
     TextColor3 = Color3.fromRGB(255, 0, 0), --This will NOT be affected by Enbaled.

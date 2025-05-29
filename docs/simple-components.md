@@ -5,8 +5,10 @@ Checkboxes are simple buttons that control a Fusion value that are
 
 ```luau
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local CreateFusionScope = require(ReplicatedStorage:WaitForChild("NexusPluginComponents"):WaitForChild("CreateFusionScope"))
-local CreateCheckbox = require(ReplicatedStorage:WaitForChild("NexusPluginComponents"):WaitForChild("Input"):WaitForChild("CreateCheckbox"))
+local NexusPluginComponents = require(ReplicatedStorage:WaitForChild("NexusPluginComponents"))
+
+local CreateCheckbox = NexusPluginComponents.Input.CreateCheckbox
+local CreateFusionScope = NexusPluginComponents.CreateFusionScope
 
 local Scope = CreateFusionScope()
 local Value = Scope:Value("Checked")
@@ -23,7 +25,9 @@ the button will also toggle the visibility of the window.
 
 ```luau
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local CreatePluginToggleButton.spec = require(ReplicatedStorage:WaitForChild("NexusPluginComponents"):WaitForChild("Input"):WaitForChild("Plugin"):WaitForChild("CreatePluginToggleButton"))
+local NexusPluginComponents = require(ReplicatedStorage:WaitForChild("NexusPluginComponents"))
+
+local CreatePluginToggleButton = NexusPluginComponents.Input.Plugin.CreatePluginToggleButton
 
 --No scope required!
 local TestToolbar = plugin:CreateToolbar("Test Toolbar")
@@ -39,8 +43,10 @@ clamped in case the value goes above or below.
 
 ```luau
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local CreateFusionScope = require(ReplicatedStorage:WaitForChild("NexusPluginComponents"):WaitForChild("CreateFusionScope"))
-local CreateSlider = require(ReplicatedStorage:WaitForChild("NexusPluginComponents"):WaitForChild("Input"):WaitForChild("CreateSlider"))
+local NexusPluginComponents = require(ReplicatedStorage:WaitForChild("NexusPluginComponents"))
+
+local CreateSlider = NexusPluginComponents.Input.CreateSlider
+local CreateFusionScope = NexusPluginComponents.CreateFusionScope
 
 local Scope = CreateFusionScope()
 local Value = Scope:Value(0.5)
@@ -59,8 +65,10 @@ Two options can be passed in:
 
 ```luau
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local CreateFusionScope = require(ReplicatedStorage:WaitForChild("NexusPluginComponents"):WaitForChild("CreateFusionScope"))
-local CreateSlider = require(ReplicatedStorage:WaitForChild("NexusPluginComponents"):WaitForChild("Input"):WaitForChild("CreateSlider"))
+local NexusPluginComponents = require(ReplicatedStorage:WaitForChild("NexusPluginComponents"))
+
+local CreateSlider = NexusPluginComponents.Input.CreateSlider
+local CreateFusionScope = NexusPluginComponents.CreateFusionScope
 
 local Scope = CreateFusionScope()
 local Value = Scope:Value(5)
