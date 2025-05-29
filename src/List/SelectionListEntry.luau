@@ -1,7 +1,7 @@
 --State for an entry in a selection list.
 --!strict
 
-local Fusion = require(script.Parent.Parent:WaitForChild("Fusion"))
+local Fusion = require(script.Parent.Parent:WaitForChild("Packages"):WaitForChild("Fusion"))
 local CreateFusionScope = require(script.Parent.Parent:WaitForChild("CreateFusionScope"))
 
 local SelectionListEntry = {}

@@ -3,7 +3,7 @@
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-local CreatePluginToggleButton = require(ReplicatedStorage.NexusPluginComponents.Input.Plugin.CreatePluginToggleButton)
+local CreatePluginToggleButton = require(ReplicatedStorage.Packages.NexusPluginComponents.Input.Plugin.CreatePluginToggleButton)
 
 return function()
     describe("A PluginToggleButton", function()

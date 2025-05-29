@@ -3,9 +3,9 @@
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-local SelectionListEntry = require(ReplicatedStorage.NexusPluginComponents.List.SelectionListEntry)
-local CreateFusionScope = require(ReplicatedStorage.NexusPluginComponents.CreateFusionScope)
-local Fusion = require(ReplicatedStorage.NexusPluginComponents.Fusion)
+local Fusion = require(ReplicatedStorage.Packages.NexusPluginComponents.Packages.Fusion)
+local SelectionListEntry = require(ReplicatedStorage.Packages.NexusPluginComponents.List.SelectionListEntry)
+local CreateFusionScope = require(ReplicatedStorage.Packages.NexusPluginComponents.CreateFusionScope)
 
 return function()
     describe("A SelectionListEntry", function()

@@ -3,8 +3,8 @@
 
 local SLIDER_BUTTON_WIDTH = 8
 
+local Fusion = require(script.Parent.Parent:WaitForChild("Packages"):WaitForChild("Fusion"))
 local CreateFusionScope = require(script.Parent.Parent:WaitForChild("CreateFusionScope"))
-local Fusion = require(script.Parent.Parent:WaitForChild("Fusion"))
 
 local Children = Fusion.Children
 local OnEvent = Fusion.OnEvent

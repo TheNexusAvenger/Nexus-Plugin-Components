@@ -3,8 +3,8 @@
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-local CreateCheckbox = require(ReplicatedStorage.NexusPluginComponents.Input.CreateCheckbox)
-local CreateFusionScope = require(ReplicatedStorage.NexusPluginComponents.CreateFusionScope)
+local CreateCheckbox = require(ReplicatedStorage.Packages.NexusPluginComponents.Input.CreateCheckbox)
+local CreateFusionScope = require(ReplicatedStorage.Packages.NexusPluginComponents.CreateFusionScope)
 
 return function()
     describe("A checkbox", function()

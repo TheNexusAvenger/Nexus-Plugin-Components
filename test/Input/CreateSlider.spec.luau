@@ -3,9 +3,9 @@
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-local CreateSlider = require(ReplicatedStorage.NexusPluginComponents.Input.CreateSlider)
-local CreateFusionScope = require(ReplicatedStorage.NexusPluginComponents.CreateFusionScope)
-local Fusion = require(ReplicatedStorage.NexusPluginComponents.Fusion)
+local Fusion = require(ReplicatedStorage.Packages.NexusPluginComponents.Packages.Fusion)
+local CreateSlider = require(ReplicatedStorage.Packages.NexusPluginComponents.Input.CreateSlider)
+local CreateFusionScope = require(ReplicatedStorage.Packages.NexusPluginComponents.CreateFusionScope)
 
 local Children = Fusion.Children
 

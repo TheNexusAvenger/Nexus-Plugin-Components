@@ -1,9 +1,9 @@
 --Creates an expandable entry list.
 --!strict
 
-local Fusion = require(script.Parent.Parent:WaitForChild("Fusion"))
+local Fusion = require(script.Parent.Parent:WaitForChild("Packages"):WaitForChild("Fusion"))
+local NexusVirtualList = require(script.Parent.Parent:WaitForChild("Packages"):WaitForChild("NexusVirtualList"))
 local CreateFusionScope = require(script.Parent.Parent:WaitForChild("CreateFusionScope"))
-local NexusVirtualList = require(script.Parent.Parent:WaitForChild("NexusVirtualList"))
 local SelectionListEntry = require(script.Parent:WaitForChild("SelectionListEntry"))
 local SelectionListEntryFrame = require(script.Parent:WaitForChild("SelectionListEntryFrame"))
 

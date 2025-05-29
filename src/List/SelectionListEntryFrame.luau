@@ -5,7 +5,7 @@ local EXPANDED_ARROW_IMAGE = "rbxasset://textures/DeveloperFramework/button_arro
 local COLLAPSED_ARROW_IMAGE = "rbxasset://textures/DeveloperFramework/button_arrow_right.png"
 local DOUBLE_CLICK_MAX_SECONDS = 0.5
 
-local Fusion = require(script.Parent.Parent:WaitForChild("Fusion"))
+local Fusion = require(script.Parent.Parent:WaitForChild("Packages"):WaitForChild("Fusion"))
 local CreateFusionScope = require(script.Parent.Parent:WaitForChild("CreateFusionScope"))
 local SelectionListEntry = require(script.Parent:WaitForChild("SelectionListEntry"))
 

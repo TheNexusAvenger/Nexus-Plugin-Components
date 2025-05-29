@@ -5,9 +5,9 @@
         "ReplicatedStorage": {
             "$className": "ReplicatedStorage",
             "Packages": {
-                "$path": "./Packages",
+                "$className": "Folder",
                 "NexusPluginComponents": {
-                    "$path": "."
+                    "$path": "./default-standalone.project.json"
                 }
             }
         },

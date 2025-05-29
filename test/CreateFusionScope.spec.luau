@@ -3,8 +3,8 @@
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-local Fusion = require(ReplicatedStorage.NexusPluginComponents.Fusion)
-local CreateFusionScope = require(ReplicatedStorage.NexusPluginComponents.CreateFusionScope)
+local Fusion = require(ReplicatedStorage.Packages.NexusPluginComponents.Packages.Fusion)
+local CreateFusionScope = require(ReplicatedStorage.Packages.NexusPluginComponents.CreateFusionScope)
 
 return function()
     describe("A FusionScope", function()

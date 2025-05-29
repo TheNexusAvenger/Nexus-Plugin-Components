@@ -60,14 +60,13 @@ local AUTO_BUTTON_COLOR_CLASSES ={
     "ImageButton",
 } :: {string}
 
-local Fusion = require(script.Parent:WaitForChild("Fusion"))
-local FusionTypes = require(script.Parent:WaitForChild("Fusion"):WaitForChild("Types"))
+local Fusion = require(script.Parent:WaitForChild("Packages"):WaitForChild("Fusion"))
 
-export type FusionScope = FusionTypes.Fusion & {
+export type FusionScope = Fusion.Scope<typeof(Fusion) & {
     PluginColor: (Scope: FusionScope, Color: Fusion.UsedAs<Enum.StudioStyleGuideColor>, Modifier: Fusion.UsedAs<Enum.StudioStyleGuideModifier>?) -> (Fusion.UsedAs<Color3>),
-    Create: (Scope: FusionScope, ClassName: string, Enabled: Fusion.UsedAs<boolean>?) -> (FusionTypes.PropertyTable) -> (Instance),
+    Create: (Scope: FusionScope, ClassName: string, Enabled: Fusion.UsedAs<boolean>?) -> (Fusion.PropertyTable) -> (Instance),
     ValueFromProperty: <T>(Scope: FusionScope, Ins: Fusion.UsedAs<any?>, PropertyName: string) -> (Fusion.Value<T?>),
-}
+}>
 
 return function(OverrideStudioSettings: Studio?): FusionScope
     return Fusion.scoped(Fusion, {
@@ -84,8 +83,8 @@ return function(OverrideStudioSettings: Studio?): FusionScope
                 return (use(StudioTheme) :: StudioTheme):GetColor(use(Color), use(Modifier))
             end)
         end,
-        Create = function(Scope: FusionScope, ClassName: string, Enabled: Fusion.UsedAs<boolean>?): (FusionTypes.PropertyTable) -> (Instance)
-            return function(Properties: FusionTypes.PropertyTable): Instance
+        Create = function(Scope: FusionScope, ClassName: string, Enabled: Fusion.UsedAs<boolean>?): (Fusion.PropertyTable) -> (Instance)
+            return function(Properties: Fusion.PropertyTable): Instance
                 --Add the AutoButtonColor value.
                 --This has to be done before the defaults since the defaults can set a value.
                 if Enabled and Properties["AutoButtonColor"] == nil and table.find(AUTO_BUTTON_COLOR_CLASSES, ClassName) then

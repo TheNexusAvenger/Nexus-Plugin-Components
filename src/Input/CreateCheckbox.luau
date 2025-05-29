@@ -7,8 +7,8 @@ local STATE_TEXT = {
     Unchecked = "",
 }
 
+local Fusion = require(script.Parent.Parent:WaitForChild("Packages"):WaitForChild("Fusion"))
 local CreateFusionScope = require(script.Parent.Parent:WaitForChild("CreateFusionScope"))
-local Fusion = require(script.Parent.Parent:WaitForChild("Fusion"))
 
 local OnEvent = Fusion.OnEvent
 
